@@ -189,6 +189,50 @@ h3{font-size:clamp(17px,1.8vw,22px);font-weight:600;text-transform:uppercase}
 .ruta-info .ri-meta{font-size:13.5px;color:var(--mist)}
 .ruta-chev{font-size:22px;color:var(--violet-hot);flex:none}
 
+/* ─── home tecnológico: CTA botando, estrellas en movimiento, nebulosa ─── */
+@keyframes bounce-cta{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+.btn.bounce{animation:bounce-cta 1.5s ease-in-out infinite}
+@keyframes drift{0%{transform:translate(0,0) scale(1);opacity:.35}50%{transform:translate(var(--dx,30px),var(--dy,-20px)) scale(1.35);opacity:.95}100%{transform:translate(0,0) scale(1);opacity:.35}}
+.dots.drift .dot{animation:drift var(--dur,10s) ease-in-out var(--del,0s) infinite}
+@keyframes nebula{0%{transform:translate(0,0) scale(1);opacity:.55}100%{transform:translate(5%,4%) scale(1.18);opacity:.95}}
+.welcome::before{content:'';position:absolute;inset:-15%;pointer-events:none;z-index:0;
+  background:radial-gradient(circle at 25% 30%,rgba(123,63,242,.42),transparent 42%),
+             radial-gradient(circle at 75% 55%,rgba(255,46,99,.30),transparent 45%),
+             radial-gradient(circle at 55% 12%,rgba(200,255,0,.10),transparent 35%);
+  animation:nebula 12s ease-in-out infinite alternate}
+
+/* ─── chip próximo punto: morado con fade, letras blancas ─── */
+#scr-mapa .next-poi-chip{background:var(--grad-active);border:none;box-shadow:0 8px 26px rgba(96,48,160,.45)}
+#scr-mapa .next-poi-chip .npc-lbl{color:rgba(255,255,255,.85)}
+#scr-mapa .next-poi-chip .npc-name{color:#fff}
+
+/* ─── ventana de sitios del recorrido (sobre el mapa) ─── */
+.sitios-panel{position:absolute;left:26px;bottom:120px;z-index:21;width:400px;max-height:46%;
+  display:flex;flex-direction:column;padding:20px 14px 12px;transition:opacity .3s,transform .3s}
+.sitios-panel.hide{opacity:0;pointer-events:none;transform:translateY(16px)}
+.sitios-panel .sp-title{padding:0 10px 10px;flex:none}
+.sp-list{overflow-y:auto;-webkit-overflow-scrolling:touch}
+.sp-item{display:flex;align-items:center;gap:12px;padding:12px 10px;border-radius:14px;cursor:pointer;min-height:64px}
+.sp-item:active{background:rgba(123,63,242,.18)}
+.sp-item + .sp-item{border-top:1px solid rgba(123,63,242,.15)}
+.sp-num{width:34px;height:34px;flex:none;border-radius:50%;background:var(--grad-active);color:#fff;
+  display:flex;align-items:center;justify-content:center;font-weight:800;font-size:13px}
+.sp-item.visitado .sp-num{background:#1f9d55}
+.sp-item.visitado .sp-name{color:#7ee2a8}
+.sp-info{flex:1;min-width:0}
+.sp-name{font-weight:700;font-size:14.5px;text-transform:uppercase;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sp-meta{font-size:12px;color:var(--mist);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sp-fav{width:44px;height:44px;flex:none;border-radius:50%;border:1px solid var(--glass-border);
+  background:rgba(255,255,255,.06);color:#fff;font-size:16px;cursor:pointer}
+.sp-fav.on{background:var(--grad-active);border-color:transparent}
+
+/* ─── pines de cadenas retail (DENUE) ─── */
+.store-pin{width:26px;height:26px;border-radius:50%;border:2px solid #fff;box-shadow:0 3px 8px rgba(0,0,0,.4);
+  display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:#fff;cursor:pointer}
+.store-pin.wm{background:#0053e2}
+.store-pin.so{background:#D52B1E}
+.store-pin.ch{background:#F58220}
+
 /* geonexa iframe (interfaz real connectia.mx) */
 .geo-map-mock iframe{position:absolute;inset:0;width:100%;height:100%;border:0;border-radius:var(--r);background:#150a30}
 
@@ -390,14 +434,13 @@ nav#bottomnav{position:absolute;left:0;right:0;bottom:0;height:var(--nav-h);z-in
     <div class="welcome-center">
       <div class="eyebrow on-photo fade-up">BIENVENIDO AL RECORRIDO</div>
       <div class="co-lockup fade-up d1" style="margin-top:34px">
-        <div class="cx-letters" style="height:clamp(38px,5vw,70px)"><div class="cx-logo"></div></div>
+        <div class="cx-letters" style="height:clamp(33px,4.4vw,60px)"><div class="cx-logo"></div></div>
         <span class="co-x">×</span>
         <div class="co-wm" id="wm-logo-slot" style="height:clamp(40px,5.2vw,72px)"></div>
       </div>
       <div class="welcome-ctas fade-up d4">
-        <button class="btn primary" onclick="startTour()">▶&nbsp; INICIAR RECORRIDO</button>
-        <button class="btn ghost" onclick="verRecorrido()">VER RECORRIDO</button>
-        <button class="btn ghost" onclick="go('connectia')">EXPLORAR PLATAFORMA</button>
+        <button class="btn primary bounce" onclick="startTour()">▶&nbsp; INICIAR RECORRIDO</button>
+        <button class="btn ghost" onclick="verRecorrido()">SIMULAR RECORRIDO</button>
       </div>
     </div>
     <div class="welcome-bottom">
@@ -425,18 +468,22 @@ nav#bottomnav{position:absolute;left:0;right:0;bottom:0;height:var(--nav-h);z-in
       <div class="npc-name" id="next-poi-name">—</div></div>
     </div>
   </div>
-  <div class="card map-hint">
-    <p>Estás recorriendo una ruta diseñada para visualizar el potencial de la presencia cultural, la data y el retail
-    media en movimiento. <strong>Toca los puntos del mapa para descubrir más.</strong></p>
+  <div class="card sitios-panel" id="sitios-panel">
+    <div class="sp-title">
+      <div class="eyebrow" style="font-size:11px">SITIOS DEL RECORRIDO</div>
+      <div style="font-size:12.5px;color:var(--mist);margin-top:4px">Toca un sitio para ver su ficha técnica — se marcan en verde al pasar.</div>
+    </div>
+    <div class="sp-list" id="sp-list"></div>
   </div>
   <div class="map-controls">
+    <button class="map-btn" id="play-btn" onclick="togglePlay()" style="display:none" aria-label="Pausa / Play">⏸</button>
     <button class="map-btn" onclick="mapZoom(1)" aria-label="Acercar">＋</button>
     <button class="map-btn" onclick="mapZoom(-1)" aria-label="Alejar">－</button>
     <button class="map-btn" onclick="centerCar()" aria-label="Centrar ubicación">◉</button>
     <button class="map-btn" onclick="fitRoute()" aria-label="Ver ruta completa">⛶</button>
   </div>
   <!-- botón tipo ruta Waze: lista de sitios del recorrido -->
-  <button class="ruta-btn" onclick="openRuta()">
+  <button class="ruta-btn" onclick="toggleSitios()">
     <svg viewBox="0 0 24 24" style="width:26px;height:26px;stroke:#fff;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round">
       <circle cx="6" cy="19" r="2.6"/><circle cx="18" cy="5" r="2.6"/>
       <path d="M8.4 19H15a3.5 3.5 0 000-7H9a3.5 3.5 0 010-7h6.4"/>
@@ -467,10 +514,10 @@ nav#bottomnav{position:absolute;left:0;right:0;bottom:0;height:var(--nav-h);z-in
 <section class="screen" id="scr-ooh">
   <div class="screen-pad">
     <div class="section-head">
-      <div class="eyebrow">CONNECTIA × WALMART · OUT OF NOISE</div>
-      <h1>MOCKUPS DE PRESENCIA URBANA</h1>
-      <p class="body section-sub">No compramos inventario: <em>curamos presencia</em>. Cada formato está seleccionado
-      por su valor cultural, su audiencia y su momento.</p>
+      <div class="eyebrow">CONNECTIA × WALMART · SITIOS ADICIONALES</div>
+      <h1>OPORTUNIDADES</h1>
+      <p class="body section-sub">Sitios estratégicos que no están en la ruta del recorrido — inventario adicional
+      curado para amplificar la presencia de Walmart en toda la ciudad. No compramos inventario: <em>curamos presencia</em>.</p>
     </div>
     <div class="filter-row" id="ooh-filters"></div>
     <div class="grid cols3" id="ooh-grid"></div>
@@ -703,29 +750,29 @@ const CATS = [['todos','Todos'],['espectaculares','Espectaculares'],['dooh','Dig
  ['totems','Tótems'],['puentes','Puentes'],['mobiliario','Mobiliario'],['indoor','Indoor'],
  ['experiencias','Experiencias']];
 const MOCKUPS = [
- {id:'m1',cat:'espectaculares',titulo:'Espectacular Reforma 360',ubic:'Paseo de la Reforma · Ángel',medidas:'12.90 × 7.20 m',
-  aud:'Urbana · ejecutiva',obj:'Top of mind + precio',imp:'alto',poi:'p1',copy:'Precios bajos todos los días',
+ {id:'m1',cat:'espectaculares',titulo:'Espectacular Insurgentes Sur',ubic:'Insurgentes Sur · Nápoles',medidas:'12.90 × 7.20 m',
+  aud:'Vehicular · corporativa',obj:'Top of mind + precio',imp:'alto',poi:null,copy:'Precios bajos todos los días',
   campanas:['Buen Fin','Walmart Pass'],grad:'linear-gradient(160deg,#2a1656,#502090)'},
- {id:'m2',cat:'dooh',titulo:'DOOH Premium Av. Reforma',ubic:'Glorieta Diana Cazadora',medidas:'10 × 5 m LED',
-  aud:'Commuters · oficinas',obj:'Always-on + promociones',imp:'alto',poi:'p2',copy:'Hot Sale · solo en Walmart',
+ {id:'m2',cat:'dooh',titulo:'DOOH Santa Fe',ubic:'Av. Vasco de Quiroga · Santa Fe',medidas:'10 × 5 m LED',
+  aud:'Corporativa · ABC+',obj:'Always-on + promociones',imp:'alto',poi:null,copy:'Hot Sale · solo en Walmart',
   campanas:['Hot Sale','Walmart.com.mx'],grad:'linear-gradient(160deg,#1a0b3d,#6030A0)'},
- {id:'m3',cat:'muros',titulo:'Muro Chapultepec',ubic:'Entrada Bosque de Chapultepec',medidas:'18 × 22 m',
-  aud:'Familias · visitantes',obj:'Marca + temporada',imp:'alto',poi:'p3',copy:'Esta Navidad, todo cuesta menos',
+ {id:'m3',cat:'muros',titulo:'Muro Centro Histórico',ubic:'Eje Central · Centro',medidas:'16 × 20 m',
+  aud:'Peatonal masiva · turismo',obj:'Marca + temporada',imp:'alto',poi:null,copy:'Esta Navidad, todo cuesta menos',
   campanas:['Navidad','Regreso a clases'],grad:'linear-gradient(160deg,#241148,#E01C8A)'},
- {id:'m4',cat:'totems',titulo:'Tótem Auditorio Nacional',ubic:'Reforma · Auditorio',medidas:'3 × 9 m doble cara',
-  aud:'Entretenimiento',obj:'Conveniencia + pickup',imp:'medio',poi:'p4',copy:'Pide y recoge antes del show',
+ {id:'m4',cat:'totems',titulo:'Tótem Perisur',ubic:'Periférico Sur · Perisur',medidas:'3 × 9 m doble cara',
+  aud:'Shoppers · familias',obj:'Conveniencia + pickup',imp:'medio',poi:null,copy:'Pide y recoge en tu Walmart',
   campanas:['Walmart Express'],grad:'linear-gradient(160deg,#201040,#7B3FF2)'},
- {id:'m5',cat:'puentes',titulo:'Puente Periférico Norte',ubic:'Periférico · acceso Toreo',medidas:'24 × 3 m',
-  aud:'Vehicular masiva',obj:'Frecuencia + precio',imp:'medio',poi:'p7',copy:'Tu súper te espera adelante',
+ {id:'m5',cat:'puentes',titulo:'Puente Viaducto',ubic:'Viaducto Miguel Alemán',medidas:'24 × 3 m',
+  aud:'Vehicular masiva',obj:'Frecuencia + precio',imp:'medio',poi:null,copy:'Tu súper te espera adelante',
   campanas:['Tráfico a tienda'],grad:'linear-gradient(160deg,#1f1b2e,#502090)'},
- {id:'m6',cat:'mobiliario',titulo:'Circuito Masaryk',ubic:'Av. Presidente Masaryk',medidas:'14 caras · 1.75 × 1.20 m',
-  aud:'Premium peatonal',obj:'Percepción + portafolio',imp:'tactico',poi:'p5',copy:'Lo gourmet también es Walmart',
+ {id:'m6',cat:'mobiliario',titulo:'Circuito Roma–Condesa',ubic:'Av. Álvaro Obregón · Roma',medidas:'16 caras · 1.75 × 1.20 m',
+  aud:'Peatonal lifestyle',obj:'Percepción + portafolio',imp:'tactico',poi:null,copy:'Lo gourmet también es Walmart',
   campanas:['Portafolio premium'],grad:'linear-gradient(160deg,#241148,#FF6A1A)'},
- {id:'m7',cat:'indoor',titulo:'Red Indoor Antara',ubic:'Antara Fashion Hall',medidas:'22 pantallas',
-  aud:'ABC+ shopper',obj:'Last-mile awareness',imp:'medio',poi:'p6',copy:'Walmart Pass: envíos gratis siempre',
+ {id:'m7',cat:'indoor',titulo:'Pantallas AICM T1',ubic:'Aeropuerto CDMX · Terminal 1',medidas:'Red de 30 pantallas',
+  aud:'Viajeros · alto valor',obj:'Last-mile awareness',imp:'medio',poi:null,copy:'Walmart Pass: envíos gratis siempre',
   campanas:['Walmart Pass'],grad:'linear-gradient(160deg,#150a30,#6030A0)'},
- {id:'m8',cat:'experiencias',titulo:'Experiencia Toreo 360',ubic:'Parque Toreo + tienda',medidas:'Ecosistema completo',
-  aud:'Shoppers + vehicular',obj:'Retail media extendido',imp:'alto',poi:'p8',copy:'De la calle al anaquel',
+ {id:'m8',cat:'experiencias',titulo:'Activación Coyoacán',ubic:'Centro de Coyoacán',medidas:'Experiencia + sampling',
+  aud:'Familias · fin de semana',obj:'Conversación + prueba',imp:'alto',poi:null,copy:'De la calle al anaquel',
   campanas:['Omnicanalidad'],grad:'linear-gradient(160deg,#2a1656,#E01C8A)'}
 ];
 
@@ -802,8 +849,24 @@ const S = {
   screen:'inicio', map:null, carMarker:null, poiMarkers:{}, mapReady:false,
   sim:{on:false, seg:0, t:0, speed:38, dist:0, total:0, timer:null},
   realGps:false, gpsWatch:null, visited:new Set(), history:[], favs:new Set(), seleccion:new Set(),
-  popupPoi:null, popupLevel:0, silent:false
+  popupPoi:null, popupLevel:0, silent:false, nav3d:false, lastPos:null, gpsPaused:false
 };
+
+/* Cadenas retail del corredor — coordenadas reales INEGI DENUE 2024 */
+const TIENDAS=[
+ {n:'Walmart Supercenter Lomas Toreo',lat:19.45110,lng:-99.21977,c:'wm'},
+ {n:"Sam's Club Toreo",lat:19.44884,lng:-99.21846,c:'wm'},
+ {n:"Sam's Club Polanco · Ejército Nacional",lat:19.43809,lng:-99.19251,c:'wm'},
+ {n:'Walmart Express Parques Polanco · Lago Alberto',lat:19.43996,lng:-99.18525,c:'wm'},
+ {n:'Walmart Express Horacio · Polanco',lat:19.43356,lng:-99.18981,c:'wm'},
+ {n:'Walmart Supercenter Buenavista',lat:19.44387,lng:-99.15407,c:'wm'},
+ {n:'Soriana Híper Miyana · Ejército Nacional',lat:19.43846,lng:-99.19990,c:'so'},
+ {n:'Soriana Súper Lomas Virreyes',lat:19.42244,lng:-99.20449,c:'so'},
+ {n:'Soriana Híper Tacuba',lat:19.45975,lng:-99.19333,c:'so'},
+ {n:'Chedraui Selecto Polanco · Cervantes Saavedra',lat:19.44032,lng:-99.20638,c:'ch'},
+ {n:'Chedraui Selecto Toreo',lat:19.45442,lng:-99.21975,c:'ch'},
+ {n:'Chedraui Prado Norte · Lomas',lat:19.42758,lng:-99.21038,c:'ch'}
+];
 try{ (JSON.parse(localStorage.getItem('cxw_favs')||'[]')).forEach(f=>S.favs.add(f)); }catch(e){}
 
 const $=id=>document.getElementById(id);
@@ -871,6 +934,15 @@ function initMap(){
         <use href="#wm-spark" fill="#FFC220" transform="translate(27.5,21) scale(0.017)"/>
       </svg>`;
       S.carMarker=new maplibregl.Marker({element:car}).setLngLat(ROUTE[0]).addTo(S.map);
+      /* tiendas retail (Walmart · Soriana · Chedraui) */
+      TIENDAS.forEach(t=>{
+        const el=document.createElement('div'); el.className='store-pin '+t.c;
+        el.innerHTML = t.c==='wm'
+          ? '<svg viewBox="0 0 532.262 600" style="width:14px;height:14px;fill:#FFC220"><use href="#wm-spark"/></svg>'
+          : (t.c==='so'?'S':'C');
+        el.onclick=()=>toast(t.n);
+        new maplibregl.Marker({element:el}).setLngLat([t.lng,t.lat]).addTo(S.map);
+      });
       setGps('activo');
     });
     S.map.on('error',()=>{ if(!S.mapReady) mapOffline(); });
@@ -903,22 +975,47 @@ const TOTAL=SEGLEN.reduce((a,b)=>a+b,0);
 function startTour(){
   go('mapa');
   if(S.sim.timer){ clearInterval(S.sim.timer); S.sim.on=false; }
+  S.sim.paused=false; S.gpsPaused=false;
   S.visited.clear(); S.history=[];
   document.querySelectorAll('.poi-pin').forEach(p=>p.classList.remove('visited'));
+  nav3dOn();
   enableRealGps();
+  showPlay();
+  renderSitios();
 }
-/* VER RECORRIDO = avance simulado sobre la ruta */
+/* SIMULAR RECORRIDO = avance simulado sobre la ruta */
 function verRecorrido(){
   go('mapa');
   if(S.realGps) disableRealGps(true);
   if(S.sim.on) return;
+  S.sim.paused=false; S.gpsPaused=false;
   S.sim.on=true; S.sim.seg=0; S.sim.t=0; S.sim.dist=0;
   S.visited.clear(); S.history=[];
   document.querySelectorAll('.poi-pin').forEach(p=>p.classList.remove('visited'));
-  toast('Ver recorrido — avance simulado de la ruta');
+  toast('Simulación del recorrido iniciada');
+  nav3dOn();
   S.sim.timer=setInterval(tick,120);
+  showPlay();
+  renderSitios();
 }
-function restartTour(){ if(S.sim.timer) clearInterval(S.sim.timer); S.sim.on=false; verRecorrido(); }
+function restartTour(){ if(S.sim.timer) clearInterval(S.sim.timer); S.sim.on=false; S.sim.paused=false; verRecorrido(); }
+/* navegación 3D tipo copiloto */
+function nav3dOn(){ S.nav3d=true; S.lastPos=null;
+  if(S.map) S.map.easeTo({pitch:60,zoom:16.2,duration:900}); }
+function brg(a,b){ const r=Math.PI/180;
+  const y=Math.sin((b[0]-a[0])*r)*Math.cos(b[1]*r);
+  const x=Math.cos(a[1]*r)*Math.sin(b[1]*r)-Math.sin(a[1]*r)*Math.cos(b[1]*r)*Math.cos((b[0]-a[0])*r);
+  return (Math.atan2(y,x)/r+360)%360; }
+/* pausa / play del recorrido */
+function showPlay(){ const b=$('play-btn'); if(b){ b.style.display='flex'; b.textContent='⏸'; } }
+function togglePlay(){
+  const b=$('play-btn');
+  if(S.sim.on){ clearInterval(S.sim.timer); S.sim.on=false; S.sim.paused=true; b.textContent='▶'; toast('Recorrido en pausa'); return; }
+  if(S.sim.paused){ S.sim.paused=false; S.sim.on=true; S.sim.timer=setInterval(tick,120); b.textContent='⏸'; toast('Recorrido reanudado'); return; }
+  if(S.realGps){ disableRealGps(true); S.gpsPaused=true; b.textContent='▶'; toast('Ubicación en pausa'); return; }
+  if(S.gpsPaused){ S.gpsPaused=false; enableRealGps(); b.textContent='⏸'; return; }
+  verRecorrido();
+}
 function tick(){
   const sim=S.sim, mps=sim.speed/3.6*0.12*4; /* velocidad demo acelerada */
   sim.t+=mps;
@@ -931,7 +1028,14 @@ function tick(){
 }
 function updateCar(pos){
   if(S.carMarker) S.carMarker.setLngLat(pos);
-  if(S.map && S.screen==='mapa' && !S.map.isMoving()) S.map.easeTo({center:pos,duration:600});
+  if(S.map && S.screen==='mapa' && !S.map.isMoving()){
+    if(S.nav3d && S.lastPos && hav(S.lastPos,pos)>2){
+      S.map.easeTo({center:pos,bearing:brg(S.lastPos,pos),pitch:60,zoom:16.4,duration:600});
+    } else {
+      S.map.easeTo({center:pos,duration:600});
+    }
+  }
+  S.lastPos=pos;
   const pct=Math.min(100,Math.round(S.sim.dist/TOTAL*100));
   $('prog-fill').style.width=pct+'%'; $('prog-pct').textContent=pct+'%';
   $('st-dist').innerHTML=(S.sim.dist/1000).toFixed(1)+' <small>km</small>';
@@ -943,7 +1047,8 @@ function updateCar(pos){
 }
 function nextPoi(){ return POIS.find(p=>!S.visited.has(p.id)); }
 function finishTour(){
-  clearInterval(S.sim.timer); S.sim.on=false;
+  clearInterval(S.sim.timer); S.sim.on=false; S.sim.paused=false; S.nav3d=false;
+  const b=$('play-btn'); if(b) b.textContent='▶';
   toast('Recorrido finalizado');
   setTimeout(()=>go('cierre'),1200);
 }
@@ -961,6 +1066,7 @@ function checkProximity(pos){
       S.visited.add(nearest.id);
       if(!S.history.includes(nearest.id)) S.history.push(nearest.id);
       if(pin){ pin.classList.remove('near'); pin.classList.add('visited'); }
+      renderSitios();
     } else if(S.popupPoi!==nearest.id){ showGpsPopup(nearest,1); }
   } else if(S.popupPoi && nd>220){ hideGpsPopup(); document.querySelectorAll('.poi-pin.near').forEach(p=>p.classList.remove('near')); }
 }
@@ -1015,10 +1121,12 @@ function miniDots(n){ let h='';
   for(let i=0;i<n;i++){ const s=2+Math.random()*4;
     h+=`<span class="dot" style="width:${s}px;height:${s}px;left:${Math.random()*95}%;top:${Math.random()*90}%;animation-delay:${(Math.random()*3).toFixed(1)}s"></span>`; }
   return h; }
-function bigDots(el,n){ let h='';
+function bigDots(el,n,drift){ let h='';
   for(let i=0;i<n;i++){ const s=3+Math.random()*7;
     const cls=i===n-1?'dot citrus':(i===n-2?'dot lime':'dot');
-    h+=`<span class="${cls}" style="width:${s}px;height:${s}px;left:${Math.random()*97}%;top:${Math.random()*95}%;animation-delay:${(Math.random()*4).toFixed(1)}s"></span>`; }
+    const extra=drift?`;--dx:${(Math.random()*90-45).toFixed(0)}px;--dy:${(Math.random()*60-30).toFixed(0)}px;--dur:${(6+Math.random()*9).toFixed(1)}s;--del:${(Math.random()*5).toFixed(1)}s`:'';
+    h+=`<span class="${cls}" style="width:${s}px;height:${s}px;left:${Math.random()*97}%;top:${Math.random()*95}%;animation-delay:${(Math.random()*4).toFixed(1)}s${extra}"></span>`; }
+  if(drift) el.classList.add('drift');
   el.innerHTML=h; }
 
 /* ═══════════════ OOH GRID ═══════════════ */
@@ -1042,7 +1150,7 @@ function setOohFilter(f){ oohFilter=f; buildOoh(); }
 function toggleFav(id){
   if(S.favs.has(id)){ S.favs.delete(id); toast('Eliminado de favoritos'); }
   else{ S.favs.add(id); toast('★ Guardado en favoritos'); }
-  saveFavs(); buildOoh();
+  saveFavs(); buildOoh(); renderSitios();
 }
 
 /* ═══════════════ FICHAS (sheet) ═══════════════ */
@@ -1057,9 +1165,9 @@ function statRow(pairs){ return `<div style="display:grid;grid-template-columns:
 
 function openPoi(id,mockFirst){
   const p=POIS.find(x=>x.id===id); if(!p) return;
-  const m=MOCKUPS.find(x=>x.poi===id);
+  const art=oohArt({grad:'linear-gradient(160deg,#2a1656,#502090)',copy:p.nombre});
   openSheet(`
-   <div style="aspect-ratio:16/5.5;position:relative">${m?oohArt(m):`<div class="art" style="background:var(--grad-hero)"><div class="dots">${miniDots(10)}</div></div>`}</div>
+   <div style="aspect-ratio:16/5.5;position:relative">${art}</div>
    <div style="padding:34px 44px 44px">
      <div class="eyebrow">${p.tipo.toUpperCase()} · ${p.medidas}</div>
      <h2 style="margin-top:8px">${p.nombre}</h2>
@@ -1072,7 +1180,7 @@ function openPoi(id,mockFirst){
        <button class="btn primary" onclick="addSel('${p.id}','${p.nombre.replace(/'/g,'')}')">AGREGAR A PROPUESTA</button>
        <button class="btn ghost" onclick="toast('Modo campaña: creatividad Walmart aplicada')">VER EN MODO CAMPAÑA</button>
        <button class="btn ghost" onclick="closeSheet();go('mapa');S.map&&S.map.flyTo({center:[${p.lng},${p.lat}],zoom:16,duration:900})">VER EN MAPA</button>
-       <button class="btn ghost" onclick="toggleFav('${m?m.id:p.id}');">♥ GUARDAR FAVORITO</button>
+       <button class="btn ghost" onclick="toggleFav('${p.id}');">♥ GUARDAR FAVORITO</button>
      </div>
    </div>`);
 }
@@ -1096,28 +1204,18 @@ function openMockup(id){
 }
 function addSel(id,nombre){ S.seleccion.add(id); toast('“'+nombre+'” agregado a la propuesta'); }
 
-/* ═══════════════ RUTA TIPO WAZE (lista de sitios) ═══════════════ */
-function openRuta(){
-  openSheet(`
-   <div style="padding:44px 44px 0">
-     <div class="eyebrow">RUTA DEL RECORRIDO · REFORMA → POLANCO → TOREO</div>
-     <h2 style="margin-top:8px">SITIOS DEL RECORRIDO</h2>
-     <p class="body mt10">Toca cualquier sitio para abrir su ficha técnica.</p>
-   </div>
-   <div class="ruta-list">${POIS.map((p,i)=>`
-     <div class="ruta-item${S.visited.has(p.id)?' visitado':''}" onclick="openPoi('${p.id}')">
-       <div class="ruta-num">${S.visited.has(p.id)?'✓':String(i+1).padStart(2,'0')}</div>
-       <div class="ruta-line"></div>
-       <svg viewBox="0 0 532.262 600" style="width:26px;height:26px;flex:none;fill:var(--wm-spark)"><use href="#wm-spark"/></svg>
-       <div class="ruta-info">
-         <h3>${p.nombre}</h3>
-         <div class="ri-meta">${p.tipo} · ${p.medidas} · ${p.flujo}</div>
-       </div>
-       <span class="chip impact-${p.impacto}">${p.impacto==='tactico'?'Táctico':p.impacto}</span>
-       <span class="ruta-chev">›</span>
-     </div>`).join('')}
-   </div>`);
+/* ═══════════════ VENTANA DE SITIOS DEL RECORRIDO ═══════════════ */
+function renderSitios(){
+  const el=$('sp-list'); if(!el) return;
+  el.innerHTML=POIS.map((p,i)=>`
+   <div class="sp-item${S.visited.has(p.id)?' visitado':''}" onclick="openPoi('${p.id}')">
+     <div class="sp-num">${S.visited.has(p.id)?'✓':String(i+1).padStart(2,'0')}</div>
+     <div class="sp-info"><div class="sp-name">${p.nombre}</div>
+       <div class="sp-meta">${p.tipo} · ${p.flujo}</div></div>
+     <button class="sp-fav${S.favs.has(p.id)?' on':''}" onclick="event.stopPropagation();toggleFav('${p.id}')">♥</button>
+   </div>`).join('');
 }
+function toggleSitios(){ $('sitios-panel').classList.toggle('hide'); }
 
 /* ═══════════════ VIDEOS ═══════════════ */
 function buildVideos(){
@@ -1238,7 +1336,8 @@ function exportResumen(){
 function init(){
   buildNav(); buildOoh(); buildVideos(); buildSoluciones(); buildCasos();
   $('ruta-count').textContent=POIS.length;
-  bigDots($('welcome-dots'),20); bigDots($('cierre-dots'),16);
+  bigDots($('welcome-dots'),24,true); bigDots($('cierre-dots'),16);
+  renderSitios();
   initMap();
   setTimeout(()=>$('boot').classList.add('hide'),1400);
 }
