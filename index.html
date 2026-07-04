@@ -854,14 +854,14 @@ const POIS = [
   beneficio:'Presencia Walmart en un punto de alto flujo con cobertura estratégica de la zona.',
   reco:'Creatividad de precio/temporada adaptada al formato; rotación por campaña.',
   campanas:['Precios bajos todos los días','Buen Fin','Walmart Pass'],radio:200,
-  foto:'assets/sitios/CMCX-14272-A.jpg'},
+  foto:'assets/sitios/CMCX-14272-A.jpg',fotoWm:'assets/sitios/CMCX-14272-A-wm.jpg'},
  {id:'CXCX-19000-A',estatus:'disponible',nombre:'Landmark Hamburgo esq. Florencia',lat:19.425229,lng:-99.166888,tipo:'Landmark',cat:'recorrido',
   medidas:'Vallas 12.03/11.15 × 3.85 m + muro 12 × 6 m',imp:2100000,audiencia:'Zona Rosa · NSE C+ C · AAA',impacto:'alto',
   desc:'Landmark en esquina Hamburgo y Florencia, Col. Juárez, a 500 m de Reforma 222.',
   beneficio:'Presencia Walmart en un punto de alto flujo con cobertura estratégica de la zona.',
   reco:'Creatividad de precio/temporada adaptada al formato; rotación por campaña.',
   campanas:['Precios bajos todos los días','Buen Fin','Walmart Pass'],radio:200,
-  foto:'assets/sitios/CXCX-19000-A.jpg'},
+  foto:'assets/sitios/CXCX-19000-A.jpg',fotoWm:'assets/sitios/CXCX-19000-A-wm.jpg'},
  {id:'CXCX-18528-A',estatus:'disponible',nombre:'Muro Circuito Interior · Leibnitz',lat:19.425661,lng:-99.176715,tipo:'Muro',cat:'recorrido',
   medidas:'10.00 × 12.00 m',imp:1500000,audiencia:'Vehicular · entrada a Polanco',impacto:'medio',
   desc:'Circuito Interior y Leibnitz, Anzures: entrada a Polanco, Reforma y Chapultepec.',
@@ -875,7 +875,7 @@ const POIS = [
   beneficio:'Presencia Walmart en un punto de alto flujo con cobertura estratégica de la zona.',
   reco:'Creatividad de precio/temporada adaptada al formato; rotación por campaña.',
   campanas:['Precios bajos todos los días','Buen Fin','Walmart Pass'],radio:200,
-  foto:'assets/sitios/EEM-18177-B.jpg'},
+  foto:'assets/sitios/EEM-18177-B.jpg',fotoWm:'assets/sitios/EEM-18177-B-wm.jpg'},
  {id:'MPEM-15556-A',estatus:'disponible',nombre:'Muro Pafnuncio Padilla · Satélite',lat:19.512873,lng:-99.23271,tipo:'Muro doble cara',cat:'recorrido',
   medidas:'25.00 × 16.20 m · 2 caras',imp:1800000,audiencia:'NSE C+ · junto a Plaza Satélite',impacto:'medio',
   desc:'Entre Circuito Centro Comercial y Periférico Norte, junto a Plaza Satélite.',
@@ -889,7 +889,7 @@ const POIS = [
   beneficio:'Presencia Walmart en un punto de alto flujo con cobertura estratégica de la zona.',
   reco:'Creatividad de precio/temporada adaptada al formato; rotación por campaña.',
   campanas:['Precios bajos todos los días','Buen Fin','Walmart Pass'],radio:200,
-  foto:'assets/sitios/EEM-0819-A.jpg'},
+  foto:'assets/sitios/EEM-0819-A.jpg',fotoWm:'assets/sitios/EEM-0819-A-wm.jpg'},
  {id:'BEM-18567-A',estatus:'disponible',nombre:'Muro Blvd. F.M. · Palmas',lat:19.399222,lng:-99.270725,tipo:'Muro gran formato',cat:'recorrido',
   medidas:'12.40 × 40.30 m',imp:1600000,audiencia:'Vehicular · Villa de las Palmas',impacto:'medio',
   desc:'Muro de gran formato sobre boulevard en Naucalpan.',
@@ -952,7 +952,7 @@ const POIS = [
   beneficio:'Presencia Walmart en un punto de alto flujo con cobertura estratégica de la zona.',
   reco:'Creatividad de precio/temporada adaptada al formato; rotación por campaña.',
   campanas:['Precios bajos todos los días','Buen Fin','Walmart Pass'],radio:200,
-  foto:'assets/sitios/CMCX-16682-A.jpg'},
+  foto:'assets/sitios/CMCX-16682-A.jpg',fotoWm:'assets/sitios/CMCX-16682-A-wm.jpg'},
  {id:'ECX-5533-A',estatus:'disponible',nombre:'Pantalla LED Revolución 1106',lat:19.366308,lng:-99.188601,tipo:'Pantalla LED',cat:'recorrido',
   medidas:'11.83 × 6.37 m',imp:1873962,audiencia:'Vehicular · San José Insurgentes',impacto:'medio',
   desc:'Av. Revolución 1106; 809 spots/día, encendida 6:00–23:59.',
@@ -1389,7 +1389,7 @@ function showGpsPopup(p,level){
   S.popupPoi=p.id; S.popupLevel=level;
   $('gpsp-eyebrow').textContent = level===2 ? 'ESTÁS PASANDO POR' : 'NUEVO PUNTO DE INTERÉS CERCA';
   $('gpsp-title').textContent=p.nombre;
-  $('gpsp-photo').innerHTML = p.foto ? '<img src="'+p.foto+'" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover">' : oohArt({grad:'linear-gradient(160deg,#2a1656,#502090)',copy:''});
+  $('gpsp-photo').innerHTML = (p.fotoWm||p.foto) ? '<img src="'+(p.fotoWm||p.foto)+'" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover">' : oohArt({grad:'linear-gradient(160deg,#2a1656,#502090)',copy:''});
   $('gps-popup').dataset.poi=p.id;
   $('gpsp-sem').innerHTML=semaforoHtml(p.estatus);
   $('gpsp-info').onclick=()=>{ hideGpsPopup(); openPoi(p.id); };
@@ -1486,7 +1486,8 @@ function statRow(pairs){ return `<div style="display:grid;grid-template-columns:
 function openPoi(id,mockFirst){
   const p=POIS.find(x=>x.id===id); if(!p) return;
   const art = p.foto
-    ? `<img src="${p.foto}" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover" alt="">`
+    ? `<img id="ficha-foto" src="${p.foto}" data-real="${p.foto}" data-wm="${p.fotoWm||''}"
+        style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover" alt="">`
     : oohArt({grad:'linear-gradient(160deg,#2a1656,#502090)',copy:p.nombre});
   openSheet(`
    <div style="aspect-ratio:16/5.5;position:relative;overflow:hidden;background:#150a30">${art}</div>
@@ -1506,7 +1507,7 @@ function openPoi(id,mockFirst){
      <div class="mt30" style="display:flex;gap:14px;flex-wrap:wrap">
        <button class="btn primary" onclick="addSel('${p.id}','${p.nombre.replace(/'/g,'')}')">AGREGAR A PROPUESTA</button>
        <button class="btn lime" onclick="reservar('${p.id}')">RESERVAR</button>
-       <button class="btn ghost" onclick="toast('Modo campaña: creatividad Walmart aplicada')">VER EN MODO CAMPAÑA</button>
+       ${p.fotoWm?`<button class="btn ghost" onclick="toggleCampana()">VER EN MODO CAMPAÑA</button>`:''}
        <button class="btn ghost" onclick="closeSheet();go('mapa');S.map&&S.map.flyTo({center:[${p.lng},${p.lat}],zoom:16,duration:900})">VER EN MAPA</button>
        <button class="btn ghost" onclick="toggleFav('${p.id}');">♥ GUARDAR FAVORITO</button>
      </div>
@@ -1529,6 +1530,12 @@ function openMockup(id){
        <button class="btn ghost" onclick="addSel('${m.id}','${m.titulo.replace(/'/g,'')}')">AGREGAR A SELECCIÓN</button>
      </div>
    </div>`);
+}
+function toggleCampana(){
+  const im=$('ficha-foto'); if(!im||!im.dataset.wm) return;
+  const wm = im.src.indexOf(im.dataset.wm)===-1;
+  im.src = wm ? im.dataset.wm : im.dataset.real;
+  toast(wm ? 'Modo campaña: creatividad Walmart aplicada' : 'Foto real del sitio');
 }
 function addSel(id,nombre){ S.seleccion.add(id); toast('“'+nombre+'” agregado a la propuesta'); }
 
