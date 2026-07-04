@@ -578,7 +578,6 @@ nav#bottomnav{position:absolute;left:0;right:0;bottom:0;height:var(--nav-h);z-in
         <button class="btn sm primary" id="gpsp-info">FICHA</button>
         <button class="btn sm ghost" id="gpsp-fav">♥</button>
         <button class="btn sm lime" id="gpsp-res">RESERVAR</button>
-        <button class="btn sm ghost" onclick="hideGpsPopup()">✕</button>
       </div>
     </div>
   </div></div>
@@ -1188,7 +1187,7 @@ function showGpsPopup(p,level){
   $('gpsp-fav').onclick=()=>toggleFav(p.id);
   $('gpsp-res').onclick=()=>reservar(p.id);
   $('gps-popup').classList.add('show');
-  if(level===1){ clearTimeout(S._pt); S._pt=setTimeout(hideGpsPopup,14000); }
+  clearTimeout(S._pt); S._pt=setTimeout(hideGpsPopup, level===1?14000:20000);
 }
 function hideGpsPopup(){ $('gps-popup').classList.remove('show'); S.popupPoi=null; }
 
