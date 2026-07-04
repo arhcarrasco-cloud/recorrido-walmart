@@ -41,7 +41,7 @@ h3{font-size:clamp(17px,1.8vw,22px);font-weight:600;text-transform:uppercase}
 .num{font-weight:800;font-size:clamp(22px,2.4vw,30px);color:var(--violet-hot);letter-spacing:-.02em}
 
 /* ─── screens ─── */
-.screen{position:absolute;inset:0;bottom:var(--nav-h);overflow-y:auto;-webkit-overflow-scrolling:touch;
+.screen{position:absolute;inset:0;bottom:var(--nav-h);overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;
   opacity:0;pointer-events:none;transform:translateY(12px);transition:opacity .45s ease,transform .45s ease;
   background:var(--indigo)}
 .screen.active{opacity:1;pointer-events:auto;transform:none}
@@ -79,7 +79,7 @@ h3{font-size:clamp(17px,1.8vw,22px);font-weight:600;text-transform:uppercase}
 
 /* ═══════════════ WELCOME ═══════════════ */
 #scr-inicio{background:var(--grad-sunset)}
-.welcome{height:100%;display:flex;flex-direction:column;justify-content:space-between;padding:52px 72px;position:relative}
+.welcome{height:100%;overflow:hidden;display:flex;flex-direction:column;justify-content:space-between;padding:52px 72px;position:relative}
 .welcome-top{display:flex;justify-content:space-between;font-size:13px;font-weight:600;letter-spacing:.22em;
   text-transform:uppercase;color:rgba(255,255,255,.9)}
 .welcome-center{text-align:center;position:relative;z-index:2}
@@ -430,11 +430,11 @@ nav#bottomnav{position:absolute;left:0;right:0;bottom:0;height:var(--nav-h);z-in
 }
 @media (max-width:760px){
   :root{--nav-h:78px}
-  /* logos del home escalados para no desbordar */
-  .co-lockup .cx-letters{height:24px !important}
-  .co-lockup #wm-logo-slot{height:28px !important}
-  .co-lockup{gap:12px;flex-wrap:nowrap}
-  .co-x{font-size:18px}
+  /* logos del home: fluidos, nunca desbordan */
+  .co-lockup .cx-letters{height:clamp(13px,4.6vw,24px) !important}
+  .co-lockup #wm-logo-slot{height:clamp(15px,5.4vw,28px) !important}
+  .co-lockup{gap:10px;flex-wrap:nowrap;max-width:100%}
+  .co-x{font-size:clamp(14px,4vw,18px)}
   .welcome-bottom{flex-wrap:wrap;gap:6px}
   .welcome-center{padding:0 4px}
   .screen-pad{padding:30px 18px 30px}
@@ -443,7 +443,9 @@ nav#bottomnav{position:absolute;left:0;right:0;bottom:0;height:var(--nav-h);z-in
   .caso-detail-grid{grid-template-columns:1fr}
   .nav-item span{font-size:9px;letter-spacing:.04em}
   .nav-item svg{width:22px;height:22px}
-  .welcome{padding:26px 18px}
+  .welcome{padding:22px 14px;height:auto;min-height:100%;gap:18px}
+  #scr-cierre .screen-inner{height:auto;min-height:100%;padding:44px 16px 60px}
+  #scr-cierre h1{font-size:clamp(24px,6.6vw,34px)}
   .welcome-top{font-size:9.5px;letter-spacing:.14em}
   .welcome-bottom{font-size:11px}
   .welcome-bottom .tagline{font-size:14px}
@@ -460,9 +462,10 @@ nav#bottomnav{position:absolute;left:0;right:0;bottom:0;height:var(--nav-h);z-in
   .map-controls{right:12px;bottom:96px;gap:10px}
   .map-btn{width:52px;height:52px;font-size:19px}
   .sitios-panel{left:12px;right:70px;width:auto;bottom:158px;max-height:38%}
-  #gps-popup{left:12px;right:70px;width:auto;bottom:158px}
-  .gpsp-photo{width:118px;min-height:112px}
-  #gps-popup .card{padding:10px;gap:10px}
+  #gps-popup{left:12px;right:70px;width:auto;bottom:158px;max-width:340px}
+  #gps-popup .card{padding:10px;gap:10px;flex-direction:column}
+  .gpsp-photo{width:100%;min-height:110px}
+  .gpsp-ctas{margin-top:6px}
   .gpsp-title{font-size:13px}
   .gpsp-eyebrow{font-size:8.5px}
   .progress-track{left:12px;right:12px;bottom:10px;padding:8px 14px}
@@ -498,8 +501,6 @@ nav#bottomnav{position:absolute;left:0;right:0;bottom:0;height:var(--nav-h);z-in
 }
 @media (max-width:480px){
   .pillars{grid-template-columns:1fr}
-  .co-lockup .cx-letters{height:19px !important}
-  .co-lockup #wm-logo-slot{height:22px !important}
   #sheet-content .btn{flex:1 1 100%}
   .welcome-ctas{margin-top:22px}
   .eyebrow{font-size:10.5px;letter-spacing:.16em}
