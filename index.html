@@ -13,6 +13,7 @@
 <link href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css" rel="stylesheet">
 <script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
 <script src="https://unpkg.com/three@0.128.0/build/three.min.js"></script>
+<script src="https://unpkg.com/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
 <style>
 /* ═══════════════ CONNECTIA V3 DESIGN TOKENS ═══════════════ */
 :root{
@@ -132,6 +133,11 @@ h3{font-size:clamp(17px,1.8vw,22px);font-weight:600;text-transform:uppercase}
 .progress-track{position:absolute;left:26px;right:26px;bottom:26px;z-index:20;padding:16px 24px}
 .progress-bar{height:8px;border-radius:999px;background:rgba(255,255,255,.12);overflow:hidden;margin-top:10px}
 .progress-fill{height:100%;width:0%;border-radius:999px;background:var(--grad-active);transition:width .8s ease}
+.seek-wrap{display:flex;align-items:center;gap:12px;margin-top:8px}
+.sim-ctl{display:flex;gap:6px}
+.sim-ctl button{width:44px;height:40px;border-radius:10px;border:1px solid var(--glass-border);
+  background:rgba(255,255,255,.06);color:#fff;font-size:15px;cursor:pointer}
+#sim-seek{position:absolute;inset:-8px 0;width:100%;opacity:0;cursor:pointer}
 .progress-lbls{display:flex;justify-content:space-between;font-size:12px;font-weight:600;letter-spacing:.1em;
   text-transform:uppercase;color:var(--mist)}
 
@@ -230,6 +236,7 @@ h3{font-size:clamp(17px,1.8vw,22px);font-weight:600;text-transform:uppercase}
   display:flex;align-items:center;justify-content:center;font-weight:800;font-size:13px}
 .sp-item.visitado .sp-num{background:#1f9d55}
 .sp-item.visitado .sp-name{color:#7ee2a8}
+.sp-thumb{width:58px;height:42px;border-radius:8px;object-fit:cover;flex:none;background:#150a30}
 .sp-info{flex:1;min-width:0}
 .sp-name{font-weight:700;font-size:14.5px;text-transform:uppercase;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .sp-meta{font-size:12px;color:var(--mist);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -482,8 +489,6 @@ nav#bottomnav{position:absolute;left:0;right:0;bottom:0;height:var(--nav-h);z-in
   align-items:center;justify-content:center;gap:18px;text-align:center;padding:30px}
 #gate.hide{display:none}
 #gate-title{font-weight:900;font-size:clamp(40px,7vw,84px);letter-spacing:-.03em;color:#fff;text-transform:uppercase}
-#gate-names{display:flex;gap:16px;flex-wrap:wrap;justify-content:center;margin-top:10px}
-#gate-names .btn{min-width:180px}
 /* menú de 3 puntos + nav oculta */
 #menu-fab{position:absolute;top:18px;left:18px;z-index:80;width:48px;height:48px;border-radius:50%;
   border:1px solid var(--glass-border);background:var(--glass);backdrop-filter:blur(12px);color:#fff;
@@ -494,14 +499,19 @@ nav#bottomnav.open{transform:none}
 .sitios-panel .sp-body{display:none}
 .sitios-panel.open .sp-body{display:block}
 .sitios-panel{width:auto;max-width:430px;padding:0;bottom:112px}
-.sitios-panel .sp-head{display:flex;align-items:center;gap:10px;padding:10px 16px;cursor:pointer;min-height:48px}
-.sitios-panel .sp-head .eyebrow{font-size:10px}
+.sitios-panel{background:transparent;border:none;box-shadow:none;backdrop-filter:none}
+.sitios-panel .sp-head{display:flex;align-items:center;gap:10px;padding:12px 20px;cursor:pointer;min-height:52px;
+  background:var(--grad-active);border-radius:999px;box-shadow:0 8px 24px rgba(96,48,160,.45)}
+.sp-head-t{font-size:11px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:#fff}
+.sitios-panel .sp-arrow{color:#fff}
+.sitios-panel.open .sp-body{background:var(--glass);border:1px solid var(--glass-border);border-radius:18px;
+  margin-top:8px;backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px)}
 .sp-arrow{margin-left:auto;transition:transform .3s;font-size:14px;color:var(--violet-hot)}
 .sitios-panel.open .sp-arrow{transform:rotate(180deg)}
 .sitios-panel.open{width:400px;max-height:46%}
 .sitios-panel .sp-body{overflow-y:auto;padding:0 14px 12px}
 /* popup proximidad = pill compacto en todas las versiones */
-#gps-popup{width:auto;max-width:420px;right:auto;left:26px;bottom:112px}
+#gps-popup{width:auto;max-width:420px;left:auto;right:106px;bottom:262px}
 #gps-popup .card{padding:6px 14px 6px 6px;gap:10px;flex-direction:row;align-items:center;border-radius:999px;cursor:pointer}
 .gpsp-photo{width:44px;height:44px;min-height:44px;border-radius:50%;flex:none}
 .gpsp-body{gap:1px}
@@ -519,6 +529,14 @@ nav#bottomnav.open{transform:none}
   align-items:center;opacity:0;pointer-events:none;transition:all .5s}
 #waze-flash.show{opacity:1;transform:translateX(-50%) translateY(0)}
 #waze-flash .chain-km{color:#fff;font-size:12px}
+#street360{position:absolute;inset:0;z-index:120;background:#000;display:none;overflow:hidden}
+#street360.show{display:block}
+#s360-img{position:absolute;top:0;height:100%;width:auto;min-width:160%;animation:pan360 9s ease-in-out forwards}
+@keyframes pan360{0%{transform:translateX(0) scale(1.15)}50%{transform:translateX(calc(-100% + 100vw)) scale(1.05)}100%{transform:translateX(0) scale(1.15)}}
+.s360-top{position:absolute;top:22px;left:22px;display:flex;gap:12px;align-items:center;z-index:2}
+.s360-badge{background:var(--grad-active);color:#fff;font-size:11px;font-weight:800;letter-spacing:.14em;padding:8px 14px;border-radius:999px}
+#s360-name{color:#fff;font-weight:800;text-transform:uppercase;font-size:15px;text-shadow:0 2px 8px #000}
+.s360-skip{position:absolute;bottom:24px;right:24px;z-index:2}
 /* misc helpers */
 .spark-svg{fill:var(--wm-spark)}
 .txt-lime{color:var(--lime)}
@@ -567,7 +585,7 @@ nav#bottomnav.open{transform:none}
   .map-btn{width:52px;height:52px;font-size:19px}
   .sitios-panel{left:12px;right:70px;width:auto;bottom:158px;max-height:38%}
   /* pill compacto: thumbnail + nombre — el mapa se ve */
-  #gps-popup{left:12px;right:auto;width:auto;max-width:78%;bottom:158px}
+  #gps-popup{left:auto;right:64px;width:auto;max-width:70%;bottom:210px}
   #gps-popup .card{padding:6px 16px 6px 6px;gap:10px;flex-direction:row;align-items:center;border-radius:999px}
   .gpsp-photo{width:46px;height:46px;min-height:46px;border-radius:50%;flex:none}
   .gpsp-body{gap:2px}
@@ -650,7 +668,7 @@ nav#bottomnav.open{transform:none}
   <div class="dots light-dots" id="gate-dots"></div>
   <div class="eyebrow on-photo">CONNECTIA × WALMART · RECORRIDO</div>
   <div id="gate-title">BIENVENIDA</div>
-  <div id="gate-names"></div>
+  <div id="gate-sub" style="color:rgba(255,255,255,.85);font-size:15px;letter-spacing:.14em;text-transform:uppercase;margin-top:8px">Toca la pantalla para comenzar</div>
   <div class="tagline" style="font-style:italic;color:rgba(255,255,255,.85);margin-top:34px">everything is connected.</div>
 </div>
 <div id="boot">
@@ -700,7 +718,7 @@ nav#bottomnav.open{transform:none}
       <div class="stat"><div class="lbl">GPS</div><div class="gps-badge searching" id="gps-badge" style="margin-top:4px">
         <span class="pulse-dot"></span><span id="gps-badge-txt">BUSCANDO</span></div></div>
     </div>
-    <div class="card next-poi-chip clickable" onclick="focusNextPoi()">
+    <div class="card next-poi-chip clickable" onclick="nextPoiFicha()">
       <svg class="spark-mini spark-svg" viewBox="0 0 532.262 600"><use href="#wm-spark"/></svg>
       <div><div class="npc-lbl">Próximo punto de interés</div>
       <div class="npc-name" id="next-poi-name">—</div></div>
@@ -708,7 +726,7 @@ nav#bottomnav.open{transform:none}
   </div>
   <div class="card sitios-panel" id="sitios-panel">
     <div class="sp-head" onclick="toggleSitiosOpen()">
-      <div class="eyebrow">📍 SITIOS · <span id="sp-count">7</span></div>
+      <div class="sp-head-t">📍 SITIOS DEL RECORRIDO · <span id="sp-count">7</span></div>
       <span class="sp-arrow">▼</span>
     </div>
     <div class="sp-body">
@@ -723,17 +741,19 @@ nav#bottomnav.open{transform:none}
     <button class="map-btn" onclick="centerCar()" aria-label="Centrar ubicación">◉</button>
     <button class="map-btn" onclick="fitRoute()" aria-label="Ver ruta completa">⛶</button>
   </div>
-  <!-- botón tipo ruta Waze: lista de sitios del recorrido -->
-  <button class="ruta-btn" onclick="toggleSitios()">
-    <svg viewBox="0 0 24 24" style="width:26px;height:26px;stroke:#fff;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round">
-      <circle cx="6" cy="19" r="2.6"/><circle cx="18" cy="5" r="2.6"/>
-      <path d="M8.4 19H15a3.5 3.5 0 000-7H9a3.5 3.5 0 010-7h6.4"/>
-    </svg>
-    <span>VER RUTA · <b id="ruta-count">8</b> SITIOS</span>
-  </button>
   <div class="card progress-track">
     <div class="progress-lbls"><span>Inicio · Corporativo Walmart</span><span id="prog-pct">0%</span><span>Cierre · Interlomas</span></div>
-    <div class="progress-bar"><div class="progress-fill" id="prog-fill"></div></div>
+    <div class="seek-wrap">
+      <div class="sim-ctl">
+        <button onclick="simSkip(-1)" aria-label="Regresar">⏪</button>
+        <button onclick="togglePlay()" aria-label="Pausa/Play">⏯</button>
+        <button onclick="simSkip(1)" aria-label="Adelantar">⏩</button>
+      </div>
+      <div class="progress-bar" style="flex:1;position:relative">
+        <div class="progress-fill" id="prog-fill"></div>
+        <input type="range" id="sim-seek" min="0" max="1000" value="0" oninput="simSeek(this.value/1000)">
+      </div>
+    </div>
   </div>
   <!-- pop-up proximidad: mini card con foto + semáforo -->
   <div id="gps-popup"><div class="card">
@@ -747,6 +767,11 @@ nav#bottomnav.open{transform:none}
     <span class="gpsp-arrow">❯</span>
   </div></div>
   <div id="waze-flash"></div>
+  <div id="street360">
+    <img id="s360-img" src="" alt="">
+    <div class="s360-top"><span class="s360-badge">VISTA 360°</span><span id="s360-name"></span></div>
+    <button class="btn sm ghost s360-skip" onclick="closeStreet360()">SALTAR ▸</button>
+  </div>
 </section>
 
 <!-- ═══════ 04 · MOCKUPS OOH ═══════ -->
@@ -1109,15 +1134,14 @@ const NAV = [
  ['ooh','Oportunidades','M12 21a9 9 0 110-18 9 9 0 010 18zM12 17a5 5 0 110-10 5 5 0 010 10zM12 13a1 1 0 110-2 1 1 0 010 2z'],
  ['videos','Videos','M4 5h16a1 1 0 011 1v12a1 1 0 01-1 1H4a1 1 0 01-1-1V6a1 1 0 011-1zM10 9l5 3-5 3z'],
  ['geonexa','Geonexa','M12 21s-7-5.5-7-11a7 7 0 0114 0c0 5.5-7 11-7 11zM12 12a2 2 0 100-4 2 2 0 000 4z'],
- ['casos','Casos','M8 21h8M12 17v4M6 3h12v6a6 6 0 01-12 0zM6 5H3v2a4 4 0 004 4M18 5h3v2a4 4 0 01-4 4'],
- ['mas','Más','M5 12h.01M12 12h.01M19 12h.01']
+ ['casos','Casos','M8 21h8M12 17v4M6 3h12v6a6 6 0 01-12 0zM6 5H3v2a4 4 0 004 4M18 5h3v2a4 4 0 01-4 4']
 ];
 function buildNav(){
   $('bottomnav').innerHTML = NAV.map(([id,lbl,d])=>
     `<button class="nav-item${id===S.screen?' active':''}" id="nav-${id}" onclick="navTap('${id}')">
      <svg viewBox="0 0 24 24"><path d="${d}"/></svg><span>${lbl}</span></button>`).join('');
 }
-function navTap(id){ $('bottomnav').classList.remove('open'); if(id==='mas'){ openMas(); return; } go(id); }
+function navTap(id){ $('bottomnav').classList.remove('open'); go(id); }
 function go(id){
   document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
   const scr=$('scr-'+id); if(!scr) return;
@@ -1193,37 +1217,35 @@ function initMap(){
       corpEl.onclick=()=>toast('Corporativo Walmart de México · Toreo — inicio del recorrido');
       new maplibregl.Marker({element:corpEl}).setLngLat([-99.2155,19.4598]).addTo(S.map);
       setGps('activo');
-      /* carro 3D estilo Uber (sedán negro procedural) — fallback: marcador SVG */
+      /* carro 3D GLB (PBR) con badge Walmart — fallback: marcador SVG */
       try{
-        if(window.THREE){
+        if(window.THREE && THREE.GLTFLoader){
           S.car3d={lng:ROUTE[0][0],lat:ROUTE[0][1],bearing:0};
+          const CAR_YAW=0; /* ajustar orientación del modelo si hace falta: 0, 90, 180, -90 */
           S.map.addLayer({id:'car-3d',type:'custom',renderingMode:'3d',
             onAdd:function(map,gl){
               this.camera=new THREE.Camera(); this.scene=new THREE.Scene();
-              const d=new THREE.DirectionalLight(0xffffff,.9); d.position.set(50,-70,120).normalize(); this.scene.add(d);
-              this.scene.add(new THREE.AmbientLight(0xffffff,.85));
-              const g=new THREE.Group();
-              const body=new THREE.Mesh(new THREE.BoxGeometry(4.6,1.05,1.92),
-                new THREE.MeshStandardMaterial({color:0x15151a,metalness:.6,roughness:.35}));
-              body.position.y=.85; g.add(body);
-              const hood=new THREE.Mesh(new THREE.BoxGeometry(4.2,.28,1.8),
-                new THREE.MeshStandardMaterial({color:0x1b1b22,metalness:.6,roughness:.3}));
-              hood.position.y=1.42; g.add(hood);
-              const cab=new THREE.Mesh(new THREE.BoxGeometry(2.35,.78,1.7),
-                new THREE.MeshStandardMaterial({color:0x0c0c12,metalness:.4,roughness:.15}));
-              cab.position.set(-.15,1.85,0); g.add(cab);
-              const wm=new THREE.MeshStandardMaterial({color:0x0a0a0a,roughness:.9});
-              [[1.55,.95],[1.55,-.95],[-1.55,.95],[-1.55,-.95]].forEach(w=>{
-                const wh=new THREE.Mesh(new THREE.CylinderGeometry(.42,.42,.3,20),wm);
-                wh.rotation.x=Math.PI/2; wh.position.set(w[0],.42,w[1]); g.add(wh); });
-              const spark=new THREE.Mesh(new THREE.CircleGeometry(.55,24),
-                new THREE.MeshBasicMaterial({color:0xFFC220}));
-              spark.rotation.x=-Math.PI/2; spark.position.set(-.15,2.26,0); g.add(spark);
-              const plate=new THREE.Mesh(new THREE.CircleGeometry(.34,24),
-                new THREE.MeshBasicMaterial({color:0x0053e2}));
-              plate.rotation.x=-Math.PI/2; plate.position.set(-.15,2.27,0); g.add(plate);
-              this.model=g; this.scene.add(g); S.model3dOk=true;
-              try{ S.carMarker.getElement().style.display='none'; }catch(e){}
+              const d=new THREE.DirectionalLight(0xffffff,1.1); d.position.set(60,-80,140).normalize(); this.scene.add(d);
+              this.scene.add(new THREE.AmbientLight(0xffffff,.9));
+              const self=this;
+              new THREE.GLTFLoader().load('assets/car3d.glb',function(gg){
+                const car=gg.scene;
+                const b1=new THREE.Box3().setFromObject(car);
+                const size=b1.getSize(new THREE.Vector3());
+                const k=5.2/Math.max(size.x,size.z);
+                car.scale.setScalar(k);
+                const b2=new THREE.Box3().setFromObject(car);
+                car.position.set(-(b2.min.x+b2.max.x)/2, -b2.min.y, -(b2.min.z+b2.max.z)/2);
+                if(CAR_YAW) car.rotation.y=CAR_YAW*Math.PI/180;
+                const grp=new THREE.Group(); grp.add(car);
+                const top=(new THREE.Box3().setFromObject(grp)).max.y;
+                const badgeB=new THREE.Mesh(new THREE.CircleGeometry(.62,28),new THREE.MeshBasicMaterial({color:0x0053e2}));
+                badgeB.rotation.x=-Math.PI/2; badgeB.position.y=top+.07; grp.add(badgeB);
+                const badgeY=new THREE.Mesh(new THREE.CircleGeometry(.40,28),new THREE.MeshBasicMaterial({color:0xFFC220}));
+                badgeY.rotation.x=-Math.PI/2; badgeY.position.y=top+.08; grp.add(badgeY);
+                self.model=grp; self.scene.add(grp); S.model3dOk=true;
+                try{ S.carMarker.getElement().style.display='none'; }catch(e){}
+              });
               this.map=map;
               this.renderer=new THREE.WebGLRenderer({canvas:map.getCanvas(),context:gl,antialias:true});
               this.renderer.autoClear=false;
@@ -1232,7 +1254,7 @@ function initMap(){
               if(!this.model||!S.car3d) return;
               const c=S.car3d;
               const mc=maplibregl.MercatorCoordinate.fromLngLat([c.lng,c.lat],0);
-              const sc=mc.meterInMercatorCoordinateUnits()*1.6;
+              const sc=mc.meterInMercatorCoordinateUnits();
               const rX=new THREE.Matrix4().makeRotationAxis(new THREE.Vector3(1,0,0),Math.PI/2);
               const rZ=new THREE.Matrix4().makeRotationAxis(new THREE.Vector3(0,1,0),((90-(c.bearing||0))*Math.PI/180));
               const l=new THREE.Matrix4().makeTranslation(mc.x,mc.y,mc.z)
@@ -1263,6 +1285,7 @@ function centerCar(){ if(S.map&&S.carMarker) S.map.flyTo({center:S.carMarker.get
 function fitRoute(){ if(!S.map) return;
   const b=new maplibregl.LngLatBounds(); ROUTE.forEach(c=>b.extend(c));
   S.map.fitBounds(b,{padding:{top:160,bottom:160,left:80,right:80},duration:1000}); }
+function nextPoiFicha(){ const p=nextPoi(); if(p) openPoi(p.id); }
 function focusNextPoi(){ const p=nextPoi(); if(p&&S.map){ S.map.flyTo({center:[p.lng,p.lat],zoom:15.8,duration:900}); } }
 
 /* ═══════════════ GEO UTILS ═══════════════ */
@@ -1343,6 +1366,7 @@ function updateCar(pos){
   S.lastPos=pos;
   const pct=Math.min(100,Math.round(S.sim.dist/TOTAL*100));
   $('prog-fill').style.width=pct+'%'; $('prog-pct').textContent=pct+'%';
+  const sk=$('sim-seek'); if(sk) sk.value=Math.round(S.sim.dist/TOTAL*1000);
   $('st-dist').innerHTML=(S.sim.dist/1000).toFixed(1)+' <small>km</small>';
   const remMin=Math.max(0,Math.round((TOTAL-S.sim.dist)/1000/(trafficSpeed()/60)));
   $('st-eta').innerHTML=remMin+' <small>min</small>';
@@ -1350,6 +1374,18 @@ function updateCar(pos){
   const np=nextPoi(); $('next-poi-name').textContent=np?np.nombre:'Recorrido completado';
   checkProximity(pos);
 }
+function posAtDist(d){
+  d=Math.max(0,Math.min(TOTAL-1,d));
+  let seg=0,t=d;
+  while(seg<SEGLEN.length && t>=SEGLEN[seg]){ t-=SEGLEN[seg]; seg++; }
+  if(seg>=SEGLEN.length){ seg=SEGLEN.length-1; t=SEGLEN[seg]; }
+  S.sim.seg=seg; S.sim.t=t; S.sim.dist=d;
+  const a=ROUTE[seg], b=ROUTE[seg+1], f=SEGLEN[seg]?t/SEGLEN[seg]:0;
+  return [a[0]+(b[0]-a[0])*f, a[1]+(b[1]-a[1])*f];
+}
+function ensureSim(){ if(!S.sim.on && !S.sim.paused){ verRecorrido(); togglePlay(); } }
+function simSkip(dir){ ensureSim(); updateCar(posAtDist(S.sim.dist + dir*400)); }
+function simSeek(frac){ ensureSim(); updateCar(posAtDist(frac*TOTAL)); }
 function trafficSpeed(){ const h=new Date().getHours();
   if((h>=7&&h<10)||(h>=17&&h<20)) return 14;   /* hora pico CDMX */
   if(h>=10&&h<17) return 19;
@@ -1365,7 +1401,18 @@ function finishTour(){
   clearInterval(S.sim.timer); S.sim.on=false; S.sim.paused=false; S.nav3d=false;
   const b=$('play-btn'); if(b) b.textContent='▶';
   toast('Recorrido finalizado');
-  setTimeout(()=>go('cierre'),1200);
+  setTimeout(()=>{ openSheet(`
+   <div class="gracias-box">
+     <div class="eyebrow">CONNECTIA × WALMART · FIN DEL RECORRIDO</div>
+     <h2 class="mt10">GRACIAS</h2>
+     <p class="aforismo">«El tiempo es lo más valioso que tenemos, gracias por regalarnos un poco de él.»</p>
+     <p class="body mt10">Atentamente, todo el equipo de Connectia.</p>
+     <div class="mt30" style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
+       <button class="btn ghost" onclick="closeSheet();go('mapa');const sp=$('sitios-panel');if(sp)sp.classList.add('open')">VER SITIOS DEL RECORRIDO</button>
+       <button class="btn lime" onclick="closeSheet();restartTour()">REINICIAR RECORRIDO</button>
+       <button class="btn primary" onclick="openCarrito()">CARRITO DE FAVORITOS</button>
+     </div>
+   </div>`); },1200);
 }
 
 /* ═══════════════ LÓGICA DE PROXIMIDAD (150m / 75m) ═══════════════ */
@@ -1374,7 +1421,7 @@ function checkProximity(pos){
   POIS.forEach(p=>{ const d=hav(pos,[p.lng,p.lat]); if(d<nd){ nd=d; nearest=p; } });
   if(!nearest) return;
   const pin=$('pin-'+nearest.id);
-  if(nd<=150 && !S.visited.has(nearest.id)){
+  if(nd<=100 && !S.visited.has(nearest.id)){
     if(pin) pin.classList.add('near');
     if(nd<=75){
       showGpsPopup(nearest,2);
@@ -1382,6 +1429,7 @@ function checkProximity(pos){
       if(!S.history.includes(nearest.id)) S.history.push(nearest.id);
       if(pin){ pin.classList.remove('near'); pin.classList.add('visited'); }
       renderSitios(); flashChains(nearest);
+      if(S.sim.on) openStreet360(nearest);
     } else if(S.popupPoi!==nearest.id){ showGpsPopup(nearest,1); }
   } else if(S.popupPoi && nd>220){ hideGpsPopup(); document.querySelectorAll('.poi-pin.near').forEach(p=>p.classList.remove('near')); }
 }
@@ -1697,6 +1745,7 @@ function renderSitios(){
   el.innerHTML=POIS.map((p,i)=>`
    <div class="sp-item${S.visited.has(p.id)?' visitado':''}" onclick="openPoi('${p.id}')">
      <div class="sp-num">${S.visited.has(p.id)?'✓':String(i+1).padStart(2,'0')}</div>
+     <img class="sp-thumb" src="${p.fotoWm||p.foto||''}" alt="">
      <div class="sp-info"><div class="sp-name">${p.nombre}</div>
        <div class="sp-meta">${p.tipo}</div>
        <div class="sp-imp"><strong>${flujoMes(p)}</strong></div>
@@ -1842,18 +1891,51 @@ function exportResumen(){
 }
 
 /* ═══════════════ INIT ═══════════════ */
-const GATE_NAMES=['Adri','Moni','Ana']; /* al liberar: dejar solo ['Adri'] */
+const GATE_NAME=(new URLSearchParams(location.search).get('n'))||'Adri'; /* liga por persona: ?n=Moni */
 function initGate(){
   bigDots($('gate-dots'),40,true);
-  $('gate-names').innerHTML=GATE_NAMES.map(n=>`<button class="btn primary" onclick="enterGate('${n}')">${n.toUpperCase()}</button>`).join('');
-  if(GATE_NAMES.length===1){ $('gate-title').textContent='BIENVENIDA '+GATE_NAMES[0].toUpperCase(); }
+  $('gate-title').textContent='BIENVENIDA '+GATE_NAME.toUpperCase();
+  $('gate').onclick=enterGate;
+  if(new URLSearchParams(location.search).get('qa')){ enterGate(); setTimeout(()=>{go('mapa');verRecorrido();},1500); }
 }
-function enterGate(n){ $('gate').classList.add('hide'); toast('Bienvenida '+n+' ✨'); }
+function enterGate(){
+  $('gate').classList.add('hide');
+  try{ if(document.documentElement.requestFullscreen) document.documentElement.requestFullscreen(); }catch(e){}
+  toast('Bienvenida '+GATE_NAME+' ✨');
+}
 function toggleNav(){ $('bottomnav').classList.toggle('open'); }
 function toggleSitiosOpen(){ $('sitios-panel').classList.toggle('open'); }
+function openStreet360(p){
+  const el=$('street360'); if(!el||!(p.fotoWm||p.foto)) return;
+  S._resume360 = S.sim.on;
+  if(S.sim.on){ clearInterval(S.sim.timer); S.sim.on=false; S.sim.paused=true; const b=$('play-btn'); if(b) b.textContent='▶'; }
+  $('s360-img').src=p.fotoWm||p.foto;
+  $('s360-name').textContent=p.nombre;
+  el.classList.add('show');
+  clearTimeout(S._s360t); S._s360t=setTimeout(closeStreet360, 9200);
+}
+function closeStreet360(){
+  const el=$('street360'); el.classList.remove('show'); clearTimeout(S._s360t);
+  if(S._resume360){ S.sim.paused=false; S.sim.on=true; S.sim.timer=setInterval(tick,120); const b=$('play-btn'); if(b) b.textContent='⏸'; }
+}
+const LUGARES=[
+ {n:'CC Interlomas',lat:19.39626,lng:-99.28844},
+ {n:'Paseo Interlomas',lat:19.39623,lng:-99.28111},
+ {n:'Magnocentro / La Comer',lat:19.39943,lng:-99.27475},
+ {n:'Costco Interlomas',lat:19.40419,lng:-99.27177},
+ {n:'Parque Interlomas',lat:19.39523,lng:-99.28968},
+ {n:'Hospital Ángeles',lat:19.39580,lng:-99.28080},
+ {n:'Plaza Palmas Hills',lat:19.39359,lng:-99.28173},
+ {n:'Pabellón Bosques',lat:19.38252,lng:-99.26741}
+];
+function nearestLugares(p){
+  return LUGARES.map(l=>({n:l.n,d:hav([p.lng,p.lat],[l.lng,l.lat])}))
+    .filter(x=>x.d<=3000).sort((a,b)=>a.d-b.d).slice(0,2)
+    .map(x=>`<span class="chain-km">🏬 ${x.n} · ${(x.d/1000).toFixed(1)} km</span>`).join('');
+}
 function flashChains(p){
   const w=$('waze-flash'); if(!w) return;
-  w.innerHTML=nearestChains(p);
+  w.innerHTML=nearestChains(p)+nearestLugares(p);
   w.classList.add('show');
   clearTimeout(w._t); w._t=setTimeout(()=>w.classList.remove('show'),4500);
 }
