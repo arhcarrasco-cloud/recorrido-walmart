@@ -624,7 +624,7 @@ nav#bottomnav{position:absolute;left:0;right:0;bottom:0;height:var(--nav-h);z-in
     <span>VER RUTA · <b id="ruta-count">8</b> SITIOS</span>
   </button>
   <div class="card progress-track">
-    <div class="progress-lbls"><span>Inicio · Churubusco</span><span id="prog-pct">0%</span><span>Cierre · Revolución</span></div>
+    <div class="progress-lbls"><span>Inicio · Corporativo Walmart</span><span id="prog-pct">0%</span><span>Cierre · Anzures</span></div>
     <div class="progress-bar"><div class="progress-fill" id="prog-fill"></div></div>
   </div>
   <!-- pop-up proximidad: mini card con foto + semáforo -->
@@ -820,55 +820,6 @@ document.getElementById('wm-logo-slot').innerHTML = WM_LOCKUP;
 
 /* ═══════════════ BASE DE DATOS · PUNTOS DE INTERÉS ═══════════════ */
 const POIS = [
- {id:'ECX-1494-A',estatus:'disponible',nombre:'Pantalla LED Río Churubusco',lat:19.357593,lng:-99.145965,tipo:'Pantalla LED',cat:'recorrido',
-  medidas:'11.83 × 6.37 m',imp:5098787,audiencia:'Vehicular masiva · Tlalpan-Churubusco',impacto:'alto',
-  desc:'Pasando Tlalpan hacia División del Norte y Plaza Mitik. 809 spots/día, encendida 6:00–23:59.',
-  beneficio:'Presencia Walmart en un punto de alto flujo con cobertura estratégica de la zona.',
-  reco:'Creatividad de precio/temporada adaptada al formato; rotación por campaña.',
-  campanas:['Precios bajos todos los días','Buen Fin','Walmart Pass'],radio:200,
-  foto:'assets/sitios/ECX-1494-A.jpg',fotoWm:'assets/sitios/ECX-1494-A-wm.jpg'},
- {id:'ECX-1824-B',estatus:'disponible',nombre:'Pantalla LED Viaducto M. Alemán',lat:19.404163,lng:-99.145983,tipo:'Pantalla LED',cat:'recorrido',
-  medidas:'11.83 × 6.37 m',imp:2579780,audiencia:'Vehicular · Viaducto dirección aeropuerto',impacto:'alto',
-  desc:'Vista por Viaducto con dirección al aeropuerto pasando Vértiz. 809 spots/día.',
-  beneficio:'Presencia Walmart en un punto de alto flujo con cobertura estratégica de la zona.',
-  reco:'Creatividad de precio/temporada adaptada al formato; rotación por campaña.',
-  campanas:['Precios bajos todos los días','Buen Fin','Walmart Pass'],radio:200,
-  foto:'assets/sitios/ECX-1824-B.jpg',fotoWm:'assets/sitios/ECX-1824-B-wm.jpg'},
- {id:'CXCX-18310-A',estatus:'disponible',nombre:'Muro Insurgentes Sur 513',lat:19.403322,lng:-99.169734,tipo:'Muro',cat:'recorrido',
-  medidas:'13.35 × 7.00 m',imp:1200000,audiencia:'Vehicular · Insurgentes Condesa',impacto:'medio',
-  desc:'Vista sobre Insurgentes de Chilpancingo a Viaducto, Hipódromo Condesa.',
-  beneficio:'Presencia Walmart en un punto de alto flujo con cobertura estratégica de la zona.',
-  reco:'Creatividad de precio/temporada adaptada al formato; rotación por campaña.',
-  campanas:['Precios bajos todos los días','Buen Fin','Walmart Pass'],radio:150,
-  foto:'assets/sitios/CXCX-18310-A.jpg',fotoWm:'assets/sitios/CXCX-18310-A-wm.jpg'},
- {id:'CXCX-18524-A',estatus:'disponible',nombre:'Muro Monterrey 154 · Roma Norte',lat:19.41554,lng:-99.16343,tipo:'Muro',cat:'recorrido',
-  medidas:'20.00 × 6.00 m',imp:950000,audiencia:'Peatonal-vehicular · Roma Norte',impacto:'tactico',
-  desc:'Entre Guanajuato y Zacatecas, corazón de Roma Norte.',
-  beneficio:'Presencia Walmart en un punto de alto flujo con cobertura estratégica de la zona.',
-  reco:'Creatividad de precio/temporada adaptada al formato; rotación por campaña.',
-  campanas:['Precios bajos todos los días','Buen Fin','Walmart Pass'],radio:150,
-  foto:'assets/sitios/CXCX-18524-A.jpg',fotoWm:'assets/sitios/CXCX-18524-A-wm.jpg'},
- {id:'CMCX-14272-A',estatus:'disponible',nombre:'Muro Glorieta Insurgentes',lat:19.423396,lng:-99.162361,tipo:'Muro',cat:'recorrido',
-  medidas:'19.00 × 29.00 m',imp:2400000,audiencia:'Peatonal masiva · Glorieta Insurgentes',impacto:'alto',
-  desc:'Cruce Insurgentes y Av. Chapultepec, vista desde la glorieta.',
-  beneficio:'Presencia Walmart en un punto de alto flujo con cobertura estratégica de la zona.',
-  reco:'Creatividad de precio/temporada adaptada al formato; rotación por campaña.',
-  campanas:['Precios bajos todos los días','Buen Fin','Walmart Pass'],radio:200,
-  foto:'assets/sitios/CMCX-14272-A.jpg',fotoWm:'assets/sitios/CMCX-14272-A-wm.jpg'},
- {id:'CXCX-19000-A',estatus:'disponible',nombre:'Landmark Hamburgo esq. Florencia',lat:19.425229,lng:-99.166888,tipo:'Landmark',cat:'recorrido',
-  medidas:'Vallas 12.03/11.15 × 3.85 m + muro 12 × 6 m',imp:2100000,audiencia:'Zona Rosa · NSE C+ C · AAA',impacto:'alto',
-  desc:'Landmark en esquina Hamburgo y Florencia, Col. Juárez, a 500 m de Reforma 222.',
-  beneficio:'Presencia Walmart en un punto de alto flujo con cobertura estratégica de la zona.',
-  reco:'Creatividad de precio/temporada adaptada al formato; rotación por campaña.',
-  campanas:['Precios bajos todos los días','Buen Fin','Walmart Pass'],radio:200,
-  foto:'assets/sitios/CXCX-19000-A.jpg',fotoWm:'assets/sitios/CXCX-19000-A-wm.jpg'},
- {id:'CXCX-18528-A',estatus:'disponible',nombre:'Muro Circuito Interior · Leibnitz',lat:19.425661,lng:-99.176715,tipo:'Muro',cat:'recorrido',
-  medidas:'10.00 × 12.00 m',imp:1500000,audiencia:'Vehicular · entrada a Polanco',impacto:'medio',
-  desc:'Circuito Interior y Leibnitz, Anzures: entrada a Polanco, Reforma y Chapultepec.',
-  beneficio:'Presencia Walmart en un punto de alto flujo con cobertura estratégica de la zona.',
-  reco:'Creatividad de precio/temporada adaptada al formato; rotación por campaña.',
-  campanas:['Precios bajos todos los días','Buen Fin','Walmart Pass'],radio:150,
-  foto:'assets/sitios/CXCX-18528-A.jpg',fotoWm:'assets/sitios/CXCX-18528-A-wm.jpg'},
  {id:'EEM-18177-B',estatus:'disponible',nombre:'Pantalla LED Periférico Toreo',lat:19.460182,lng:-99.222014,tipo:'Pantalla LED',cat:'recorrido',
   medidas:'17.28 × 8.64 m',imp:6309987,audiencia:'Vehicular masiva · CDMX-Naucalpan',impacto:'alto',
   desc:'Periférico y Emiliano Zapata, límite CDMX-Naucalpan; vista sur a norte desde el segundo piso.',
@@ -959,11 +910,60 @@ const POIS = [
   beneficio:'Presencia Walmart en un punto de alto flujo con cobertura estratégica de la zona.',
   reco:'Creatividad de precio/temporada adaptada al formato; rotación por campaña.',
   campanas:['Precios bajos todos los días','Buen Fin','Walmart Pass'],radio:150,
-  foto:'assets/sitios/ECX-5533-A.jpg',fotoWm:'assets/sitios/ECX-5533-A-wm.jpg'}
+  foto:'assets/sitios/ECX-5533-A.jpg',fotoWm:'assets/sitios/ECX-5533-A-wm.jpg'},
+ {id:'ECX-1494-A',estatus:'disponible',nombre:'Pantalla LED Río Churubusco',lat:19.357593,lng:-99.145965,tipo:'Pantalla LED',cat:'recorrido',
+  medidas:'11.83 × 6.37 m',imp:5098787,audiencia:'Vehicular masiva · Tlalpan-Churubusco',impacto:'alto',
+  desc:'Pasando Tlalpan hacia División del Norte y Plaza Mitik. 809 spots/día, encendida 6:00–23:59.',
+  beneficio:'Presencia Walmart en un punto de alto flujo con cobertura estratégica de la zona.',
+  reco:'Creatividad de precio/temporada adaptada al formato; rotación por campaña.',
+  campanas:['Precios bajos todos los días','Buen Fin','Walmart Pass'],radio:200,
+  foto:'assets/sitios/ECX-1494-A.jpg',fotoWm:'assets/sitios/ECX-1494-A-wm.jpg'},
+ {id:'ECX-1824-B',estatus:'disponible',nombre:'Pantalla LED Viaducto M. Alemán',lat:19.404163,lng:-99.145983,tipo:'Pantalla LED',cat:'recorrido',
+  medidas:'11.83 × 6.37 m',imp:2579780,audiencia:'Vehicular · Viaducto dirección aeropuerto',impacto:'alto',
+  desc:'Vista por Viaducto con dirección al aeropuerto pasando Vértiz. 809 spots/día.',
+  beneficio:'Presencia Walmart en un punto de alto flujo con cobertura estratégica de la zona.',
+  reco:'Creatividad de precio/temporada adaptada al formato; rotación por campaña.',
+  campanas:['Precios bajos todos los días','Buen Fin','Walmart Pass'],radio:200,
+  foto:'assets/sitios/ECX-1824-B.jpg',fotoWm:'assets/sitios/ECX-1824-B-wm.jpg'},
+ {id:'CXCX-18310-A',estatus:'disponible',nombre:'Muro Insurgentes Sur 513',lat:19.403322,lng:-99.169734,tipo:'Muro',cat:'recorrido',
+  medidas:'13.35 × 7.00 m',imp:1200000,audiencia:'Vehicular · Insurgentes Condesa',impacto:'medio',
+  desc:'Vista sobre Insurgentes de Chilpancingo a Viaducto, Hipódromo Condesa.',
+  beneficio:'Presencia Walmart en un punto de alto flujo con cobertura estratégica de la zona.',
+  reco:'Creatividad de precio/temporada adaptada al formato; rotación por campaña.',
+  campanas:['Precios bajos todos los días','Buen Fin','Walmart Pass'],radio:150,
+  foto:'assets/sitios/CXCX-18310-A.jpg',fotoWm:'assets/sitios/CXCX-18310-A-wm.jpg'},
+ {id:'CXCX-18524-A',estatus:'disponible',nombre:'Muro Monterrey 154 · Roma Norte',lat:19.41554,lng:-99.16343,tipo:'Muro',cat:'recorrido',
+  medidas:'20.00 × 6.00 m',imp:950000,audiencia:'Peatonal-vehicular · Roma Norte',impacto:'tactico',
+  desc:'Entre Guanajuato y Zacatecas, corazón de Roma Norte.',
+  beneficio:'Presencia Walmart en un punto de alto flujo con cobertura estratégica de la zona.',
+  reco:'Creatividad de precio/temporada adaptada al formato; rotación por campaña.',
+  campanas:['Precios bajos todos los días','Buen Fin','Walmart Pass'],radio:150,
+  foto:'assets/sitios/CXCX-18524-A.jpg',fotoWm:'assets/sitios/CXCX-18524-A-wm.jpg'},
+ {id:'CMCX-14272-A',estatus:'disponible',nombre:'Muro Glorieta Insurgentes',lat:19.423396,lng:-99.162361,tipo:'Muro',cat:'recorrido',
+  medidas:'19.00 × 29.00 m',imp:2400000,audiencia:'Peatonal masiva · Glorieta Insurgentes',impacto:'alto',
+  desc:'Cruce Insurgentes y Av. Chapultepec, vista desde la glorieta.',
+  beneficio:'Presencia Walmart en un punto de alto flujo con cobertura estratégica de la zona.',
+  reco:'Creatividad de precio/temporada adaptada al formato; rotación por campaña.',
+  campanas:['Precios bajos todos los días','Buen Fin','Walmart Pass'],radio:200,
+  foto:'assets/sitios/CMCX-14272-A.jpg',fotoWm:'assets/sitios/CMCX-14272-A-wm.jpg'},
+ {id:'CXCX-19000-A',estatus:'disponible',nombre:'Landmark Hamburgo esq. Florencia',lat:19.425229,lng:-99.166888,tipo:'Landmark',cat:'recorrido',
+  medidas:'Vallas 12.03/11.15 × 3.85 m + muro 12 × 6 m',imp:2100000,audiencia:'Zona Rosa · NSE C+ C · AAA',impacto:'alto',
+  desc:'Landmark en esquina Hamburgo y Florencia, Col. Juárez, a 500 m de Reforma 222.',
+  beneficio:'Presencia Walmart en un punto de alto flujo con cobertura estratégica de la zona.',
+  reco:'Creatividad de precio/temporada adaptada al formato; rotación por campaña.',
+  campanas:['Precios bajos todos los días','Buen Fin','Walmart Pass'],radio:200,
+  foto:'assets/sitios/CXCX-19000-A.jpg',fotoWm:'assets/sitios/CXCX-19000-A-wm.jpg'},
+ {id:'CXCX-18528-A',estatus:'disponible',nombre:'Muro Circuito Interior · Leibnitz',lat:19.425661,lng:-99.176715,tipo:'Muro',cat:'recorrido',
+  medidas:'10.00 × 12.00 m',imp:1500000,audiencia:'Vehicular · entrada a Polanco',impacto:'medio',
+  desc:'Circuito Interior y Leibnitz, Anzures: entrada a Polanco, Reforma y Chapultepec.',
+  beneficio:'Presencia Walmart en un punto de alto flujo con cobertura estratégica de la zona.',
+  reco:'Creatividad de precio/temporada adaptada al formato; rotación por campaña.',
+  campanas:['Precios bajos todos los días','Buen Fin','Walmart Pass'],radio:150,
+  foto:'assets/sitios/CXCX-18528-A.jpg',fotoWm:'assets/sitios/CXCX-18528-A-wm.jpg'}
 ];
 
 /* ruta (lng,lat) Ángel → Toreo */
-const ROUTE = [[-99.145965,19.357593],[-99.145983,19.404163],[-99.169734,19.403322],[-99.16343,19.41554],[-99.162361,19.423396],[-99.166888,19.425229],[-99.176715,19.425661],[-99.222014,19.460182],[-99.23271,19.512873],[-99.271914,19.402051],[-99.270725,19.399222],[-99.281112,19.396232],[-99.2816,19.3968],[-99.288435,19.396262],[-99.278823,19.387794],[-99.2786,19.388173],[-99.277682,19.359214],[-99.247985,19.378556],[-99.19213,19.384961],[-99.188601,19.366308]];
+const ROUTE = [[-99.2155,19.4598],[-99.222014,19.460182],[-99.23271,19.512873],[-99.271914,19.402051],[-99.270725,19.399222],[-99.281112,19.396232],[-99.2816,19.3968],[-99.288435,19.396262],[-99.278823,19.387794],[-99.2786,19.388173],[-99.277682,19.359214],[-99.247985,19.378556],[-99.19213,19.384961],[-99.188601,19.366308],[-99.145965,19.357593],[-99.145983,19.404163],[-99.169734,19.403322],[-99.16343,19.41554],[-99.162361,19.423396],[-99.166888,19.425229],[-99.176715,19.425661]];
 
 /* ═══════════════ MOCKUPS OOH ═══════════════ */
 const CATS = [['todos','Todos'],['landmarks','Landmarks']];
@@ -1238,6 +1238,11 @@ function initMap(){
         el.onclick=()=>toast(t.n);
         new maplibregl.Marker({element:el}).setLngLat([t.lng,t.lat]).addTo(S.map);
       });
+      const corpEl=document.createElement('div'); corpEl.className='store-pin wm';
+      corpEl.style.width='34px'; corpEl.style.height='34px'; corpEl.style.border='3px solid #FFC220';
+      corpEl.innerHTML='<svg viewBox="0 0 532.262 600" style="width:20px;height:20px;fill:#FFC220"><use href="#wm-spark"/></svg>';
+      corpEl.onclick=()=>toast('Corporativo Walmart de México · Toreo — inicio del recorrido');
+      new maplibregl.Marker({element:corpEl}).setLngLat([-99.2155,19.4598]).addTo(S.map);
       setGps('activo');
     });
     S.map.on('error',()=>{ if(!S.mapReady && !S._retryStyle){ S._retryStyle=true;
