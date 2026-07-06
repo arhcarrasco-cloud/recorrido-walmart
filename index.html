@@ -10,6 +10,8 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,300;0,400;0,600;0,700;0,800;0,900;1,300;1,400&display=swap" rel="stylesheet">
 <link href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css" rel="stylesheet">
 <script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
+<script src="https://unpkg.com/three@0.128.0/build/three.min.js"></script>
+<script src="https://unpkg.com/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
 <style>
 /* ═══════════════ CONNECTIA V3 DESIGN TOKENS ═══════════════ */
 :root{
@@ -252,6 +254,54 @@ h3{font-size:clamp(17px,1.8vw,22px);font-weight:600;text-transform:uppercase}
 
 .chain-km{display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:800;color:var(--mist);margin-right:8px}
 .sp-chains{display:flex;gap:6px;margin-top:5px;flex-wrap:wrap}
+
+.sp-tarifa{font-size:12.5px;font-weight:800;color:var(--wm-spark);margin-top:2px}
+.gpsp-tarifa{font-size:12px;font-weight:800;color:var(--wm-spark)}
+#cart-fab{position:absolute;right:26px;bottom:calc(var(--nav-h) + 96px);z-index:65;width:68px;height:68px;
+  border-radius:50%;border:none;background:var(--grad-active);color:#fff;cursor:pointer;
+  box-shadow:0 10px 30px rgba(96,48,160,.55);display:flex;align-items:center;justify-content:center}
+#cart-fab svg{width:30px;height:30px;stroke:#fff;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+#cart-count{position:absolute;top:-4px;right:-4px;min-width:26px;height:26px;border-radius:999px;
+  background:var(--wm-spark);color:#201040;font-size:13px;font-weight:800;display:flex;align-items:center;
+  justify-content:center;padding:0 7px;border:2px solid #fff}
+.cart-item{display:flex;align-items:center;gap:14px;padding:14px 10px;border-radius:16px}
+.cart-item + .cart-item{border-top:1px solid rgba(123,63,242,.16)}
+.cart-item.no-disp{opacity:.42;filter:grayscale(.9)}
+.cart-thumb{width:86px;height:60px;border-radius:10px;object-fit:cover;flex:none;background:#150a30}
+.cart-info{flex:1;min-width:0}
+.cart-nombre{font-weight:700;font-size:14.5px;text-transform:uppercase;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cart-precio{font-size:13px;font-weight:800;color:var(--wm-spark);margin-top:2px}
+.cart-actions{display:flex;gap:8px;flex:none;align-items:center}
+.btn-estado{min-height:46px;padding:0 16px;border-radius:12px;border:1.5px solid var(--glass-border);
+  background:rgba(255,255,255,.06);color:#fff;font-family:inherit;font-size:11.5px;font-weight:800;
+  letter-spacing:.06em;text-transform:uppercase;cursor:pointer}
+.btn-estado.on-res{background:#1f9d55;border-color:transparent}
+.btn-estado.on-blk{background:var(--citrus);border-color:transparent;color:#201040}
+.btn-estado:disabled{opacity:.4;cursor:not-allowed}
+.cart-del{width:44px;height:44px;border-radius:50%;border:1px solid var(--glass-border);
+  background:rgba(255,255,255,.05);color:#ff8a8a;font-size:16px;cursor:pointer;flex:none}
+.chk-row{display:flex;justify-content:space-between;padding:9px 0;font-size:14.5px;color:var(--mist)}
+.chk-row strong{color:#fff}
+.chk-total{border-top:1px solid rgba(123,63,242,.3);margin-top:8px;padding-top:14px;font-size:18px;font-weight:800}
+.email-input{width:100%;min-height:60px;border-radius:14px;border:1.5px solid var(--glass-border);
+  background:rgba(255,255,255,.07);color:#fff;font-family:inherit;font-size:16px;padding:0 20px;outline:none}
+#push-note{position:fixed;top:26px;left:50%;transform:translateX(-50%) translateY(-140%);z-index:400;
+  width:min(560px,92%);transition:transform .5s cubic-bezier(.22,1,.36,1)}
+#push-note.show{transform:translateX(-50%) translateY(0)}
+#push-note .card{padding:22px 26px;border-color:rgba(255,194,32,.5);box-shadow:0 24px 60px rgba(0,0,0,.6)}
+.gracias-box{text-align:center;padding:30px 20px}
+.gracias-box .aforismo{font-size:20px;color:#fff;max-width:560px;margin:18px auto 0}
+.nl-hero{background:var(--grad-sunset);border-radius:20px;padding:44px 30px;text-align:center;position:relative;overflow:hidden}
+.nl-btn{display:block;width:100%;margin-top:14px}
+.tpi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:16px}
+.tpi-card{border:1.5px dashed rgba(123,63,242,.4);border-radius:16px;min-height:110px;display:flex;
+  align-items:center;justify-content:center;color:var(--slate);font-size:12px;font-weight:700;
+  text-transform:uppercase;letter-spacing:.08em;text-align:center;padding:10px}
+@media (max-width:760px){
+  #cart-fab{right:12px;bottom:calc(var(--nav-h) + 150px);width:58px;height:58px}
+  .tpi-grid{grid-template-columns:1fr}
+  .cart-actions{flex-direction:column}
+}
 
 /* geonexa iframe (interfaz real connectia.mx) */
 .geo-map-mock iframe{position:absolute;inset:0;width:100%;height:100%;border:0;border-radius:var(--r);background:#150a30}
@@ -633,6 +683,7 @@ nav#bottomnav{position:absolute;left:0;right:0;bottom:0;height:var(--nav-h);z-in
     <div class="gpsp-body">
       <div class="gpsp-eyebrow" id="gpsp-eyebrow">NUEVO PUNTO DE INTERÉS CERCA</div>
       <div class="gpsp-title" id="gpsp-title">—</div>
+      <div class="gpsp-tarifa" id="gpsp-tarifa"></div>
       <div class="semaforo" id="gpsp-sem"></div>
       <div class="gpsp-ctas">
         <button class="btn sm primary" id="gpsp-info">FICHA</button>
@@ -804,6 +855,19 @@ nav#bottomnav{position:absolute;left:0;right:0;bottom:0;height:var(--nav-h);z-in
 
 </div>
 
+<button id="cart-fab" onclick="openCarrito()" aria-label="Carrito">
+  <svg viewBox="0 0 24 24"><circle cx="9" cy="20" r="1.6"/><circle cx="17" cy="20" r="1.6"/>
+  <path d="M3 3h2.5l2.2 11.5a1.5 1.5 0 001.5 1.2h7.9a1.5 1.5 0 001.5-1.2L20.5 7H6"/></svg>
+  <span id="cart-count">0</span>
+</button>
+<div id="push-note"><div class="card">
+  <div class="eyebrow">CONNECTIA × WALMART</div>
+  <h3 class="mt10">¿DESEAS AGREGAR ALGÚN SITIO MÁS?</h3>
+  <div class="mt20" style="display:flex;gap:12px">
+    <button class="btn sm primary" style="flex:1" onclick="pushSi()">SÍ</button>
+    <button class="btn sm lime" style="flex:1" onclick="pushNo()">NO</button>
+  </div>
+</div></div>
 <div id="toast"></div>
 <script>
 'use strict';
@@ -820,49 +884,49 @@ document.getElementById('wm-logo-slot').innerHTML = WM_LOCKUP;
 
 /* ═══════════════ BASE DE DATOS · PUNTOS DE INTERÉS ═══════════════ */
 const POIS = [
- {id:'EEM-0819-A',estatus:'disponible',nombre:'Cubo Digital Magnocentro · Interlomas',lat:19.402051,lng:-99.271914,tipo:'Cubo digital',cat:'recorrido',
+ {id:'EEM-0819-A',tarifa:1000000,estatus:'disponible',nombre:'Cubo Digital Magnocentro · Interlomas',lat:19.402051,lng:-99.271914,tipo:'Cubo digital',cat:'recorrido',
   medidas:'4 caras · hasta 18.7 × 10 m',imp:4000000,audiencia:'NSE ABC+ · AAA · Interlomas',impacto:'alto',
   desc:'Frente a CC Interlomas, Toyota y agencias. Cubo digital con exclusividad de categoría.',
   beneficio:'Presencia Walmart en un punto de alto flujo con cobertura estratégica de la zona.',
   reco:'Creatividad de precio/temporada adaptada al formato; rotación por campaña.',
   campanas:['Precios bajos todos los días','Buen Fin','Walmart Pass'],radio:200,
   foto:'assets/sitios/EEM-0819-A.jpg',fotoWm:'assets/sitios/EEM-0819-A-wm.jpg'},
- {id:'BEM-18567-A',estatus:'disponible',nombre:'Muro Blvd. F.M. · Palmas',lat:19.399222,lng:-99.270725,tipo:'Muro gran formato',cat:'recorrido',
+ {id:'BEM-18567-A',tarifa:650000,estatus:'disponible',nombre:'Muro Blvd. F.M. · Palmas',lat:19.399222,lng:-99.270725,tipo:'Muro gran formato',cat:'recorrido',
   medidas:'12.40 × 40.30 m',imp:1600000,audiencia:'Vehicular · Villa de las Palmas',impacto:'medio',
   desc:'Muro de gran formato sobre boulevard en Naucalpan.',
   beneficio:'Presencia Walmart en un punto de alto flujo con cobertura estratégica de la zona.',
   reco:'Creatividad de precio/temporada adaptada al formato; rotación por campaña.',
   campanas:['Precios bajos todos los días','Buen Fin','Walmart Pass'],radio:150,
   foto:'assets/sitios/BEM-18567-A.jpg',fotoWm:'assets/sitios/BEM-18567-A-wm.jpg'},
- {id:'EEM-17672-A',estatus:'disponible',nombre:'Pantalla LED Paseo Interlomas',lat:19.396232,lng:-99.281112,tipo:'Pantalla LED · puente',cat:'recorrido',
+ {id:'EEM-17672-A',tarifa:480000,estatus:'disponible',nombre:'Pantalla LED Paseo Interlomas',lat:19.396232,lng:-99.281112,tipo:'Pantalla LED · puente',cat:'recorrido',
   medidas:'15.36 × 3.84 m',imp:1835257,audiencia:'Shoppers · frente a Liverpool',impacto:'medio',
   desc:'Frente a Liverpool y CC Paseo Interlomas.',
   beneficio:'Presencia Walmart en un punto de alto flujo con cobertura estratégica de la zona.',
   reco:'Creatividad de precio/temporada adaptada al formato; rotación por campaña.',
   campanas:['Precios bajos todos los días','Buen Fin','Walmart Pass'],radio:150,
   foto:'assets/sitios/EEM-17672-A.jpg',fotoWm:'assets/sitios/EEM-17672-A-wm.jpg'},
- {id:'EEM-17672-B',estatus:'disponible',nombre:'Puente Paseo Interlomas',lat:19.3968,lng:-99.2816,tipo:'Puente peatonal',cat:'recorrido',
+ {id:'EEM-17672-B',tarifa:320000,estatus:'disponible',nombre:'Puente Paseo Interlomas',lat:19.3968,lng:-99.2816,tipo:'Puente peatonal',cat:'recorrido',
   medidas:'15.10 × 3.80 m',imp:900000,audiencia:'Vehicular · Hospital Ángeles',impacto:'tactico',
   desc:'Frente a Hospital Ángeles Interlomas y Paseo Interlomas; lona front con jareta oculta.',
   beneficio:'Presencia Walmart en un punto de alto flujo con cobertura estratégica de la zona.',
   reco:'Creatividad de precio/temporada adaptada al formato; rotación por campaña.',
   campanas:['Precios bajos todos los días','Buen Fin','Walmart Pass'],radio:150,
   foto:'assets/sitios/EEM-17672-B.jpg',fotoWm:'assets/sitios/EEM-17672-B-wm.jpg'},
- {id:'BEM-17344-A',estatus:'disponible',nombre:'Muro CC Interlomas',lat:19.396262,lng:-99.288435,tipo:'Muro',cat:'recorrido',
+ {id:'BEM-17344-A',tarifa:350000,estatus:'disponible',nombre:'Muro CC Interlomas',lat:19.396262,lng:-99.288435,tipo:'Muro',cat:'recorrido',
   medidas:'8.00 × 15.00 m',imp:1100000,audiencia:'Shoppers · entrada principal',impacto:'tactico',
   desc:'Entrada principal del Centro Comercial Interlomas.',
   beneficio:'Presencia Walmart en un punto de alto flujo con cobertura estratégica de la zona.',
   reco:'Creatividad de precio/temporada adaptada al formato; rotación por campaña.',
   campanas:['Precios bajos todos los días','Buen Fin','Walmart Pass'],radio:150,
   foto:'assets/sitios/BEM-17344-A.jpg',fotoWm:'assets/sitios/BEM-17344-A-wm.jpg'},
- {id:'EEM-17427-B',estatus:'disponible',nombre:'Puente Hueyetlaco',lat:19.387794,lng:-99.278823,tipo:'Puente peatonal',cat:'recorrido',
+ {id:'EEM-17427-B',tarifa:280000,estatus:'disponible',nombre:'Puente Hueyetlaco',lat:19.387794,lng:-99.278823,tipo:'Puente peatonal',cat:'recorrido',
   medidas:'10.60 × 5.20 m',imp:850000,audiencia:'Vehicular · Santa Fe-Interlomas',impacto:'tactico',
   desc:'Circulación de Santa Fe hacia Interlomas.',
   beneficio:'Presencia Walmart en un punto de alto flujo con cobertura estratégica de la zona.',
   reco:'Creatividad de precio/temporada adaptada al formato; rotación por campaña.',
   campanas:['Precios bajos todos los días','Buen Fin','Walmart Pass'],radio:150,
   foto:'assets/sitios/EEM-17427-B.jpg',fotoWm:'assets/sitios/EEM-17427-B-wm.jpg'},
- {id:'EEM-15935-B',estatus:'disponible',nombre:'Unipolar Vialidad de la Barranca',lat:19.388173,lng:-99.2786,tipo:'Unipolar',cat:'recorrido',
+ {id:'EEM-15935-B',tarifa:420000,estatus:'disponible',nombre:'Unipolar Vialidad de la Barranca',lat:19.388173,lng:-99.2786,tipo:'Unipolar',cat:'recorrido',
   medidas:'12.90 × 10.80 m',imp:1400000,audiencia:'Alta plusvalía · Bosque de las Lomas',impacto:'medio',
   desc:'Sobre Vialidad de la Barranca hacia Santa Fe y Bosques; iluminado.',
   beneficio:'Presencia Walmart en un punto de alto flujo con cobertura estratégica de la zona.',
@@ -950,7 +1014,7 @@ const SOLUCIONES = [
 const S = {
   screen:'inicio', map:null, carMarker:null, poiMarkers:{}, mapReady:false,
   sim:{on:false, seg:0, t:0, speed:38, dist:0, total:0, timer:null},
-  realGps:false, gpsWatch:null, visited:new Set(), history:[], favs:new Set(), seleccion:new Set(),
+  realGps:false, gpsWatch:null, visited:new Set(), history:[], favs:new Set(), seleccion:new Set(), cartEstado:{}, model3dOk:false, car3d:null,
   popupPoi:null, popupLevel:0, silent:false, nav3d:false, lastPos:null, gpsPaused:false
 };
 
@@ -975,8 +1039,12 @@ const TIENDAS=[
  {n:'Superama Pachuca · Condesa',lat:19.41477,lng:-99.17821,c:'wm'}
 ];
 try{ (JSON.parse(localStorage.getItem('cxw_favs')||'[]')).forEach(f=>S.favs.add(f)); }catch(e){}
+try{ S.cartEstado=JSON.parse(localStorage.getItem('cxw_estado')||'{}'); }catch(e){}
+function saveEstado(){ try{ localStorage.setItem('cxw_estado',JSON.stringify(S.cartEstado)); }catch(e){} }
+function itemById(id){ return POIS.find(x=>x.id===id)||MOCKUPS.find(x=>x.id===id); }
 
 const $=id=>document.getElementById(id);
+function fmtMXN(n){ return n ? '$'+Number(n).toLocaleString('es-MX') : 'Cotizar'; }
 function toast(msg){ const t=$('toast'); t.textContent=msg; t.classList.add('show');
   clearTimeout(t._h); t._h=setTimeout(()=>t.classList.remove('show'),2600); }
 function saveFavs(){ try{ localStorage.setItem('cxw_favs',JSON.stringify([...S.favs])); }catch(e){} }
@@ -1072,6 +1140,40 @@ function initMap(){
       corpEl.onclick=()=>toast('Corporativo Walmart de México · Toreo — inicio del recorrido');
       new maplibregl.Marker({element:corpEl}).setLngLat([-99.2155,19.4598]).addTo(S.map);
       setGps('activo');
+      /* carro 3D (modelo GLB) — fallback: marcador SVG actual */
+      try{
+        if(window.THREE && THREE.GLTFLoader){
+          S.car3d={lng:ROUTE[0][0],lat:ROUTE[0][1],bearing:0};
+          S.map.addLayer({id:'car-3d',type:'custom',renderingMode:'3d',
+            onAdd:function(map,gl){
+              this.camera=new THREE.Camera(); this.scene=new THREE.Scene();
+              const d=new THREE.DirectionalLight(0xffffff,1); d.position.set(0,-70,100).normalize(); this.scene.add(d);
+              this.scene.add(new THREE.AmbientLight(0xffffff,.75));
+              const self=this;
+              new THREE.GLTFLoader().load('assets/car3d.glb',function(g){
+                self.model=g.scene; self.scene.add(g.scene); S.model3dOk=true;
+                try{ S.carMarker.getElement().style.display='none'; }catch(e){}
+              });
+              this.map=map;
+              this.renderer=new THREE.WebGLRenderer({canvas:map.getCanvas(),context:gl,antialias:true});
+              this.renderer.autoClear=false;
+            },
+            render:function(gl,matrix){
+              if(!this.model||!S.car3d) return;
+              const c=S.car3d;
+              const mc=maplibregl.MercatorCoordinate.fromLngLat([c.lng,c.lat],0);
+              const sc=mc.meterInMercatorCoordinateUnits()*7;
+              const rX=new THREE.Matrix4().makeRotationAxis(new THREE.Vector3(1,0,0),Math.PI/2);
+              const rZ=new THREE.Matrix4().makeRotationAxis(new THREE.Vector3(0,1,0),((180-(c.bearing||0))*Math.PI/180));
+              const l=new THREE.Matrix4().makeTranslation(mc.x,mc.y,mc.z)
+                .scale(new THREE.Vector3(sc,-sc,sc)).multiply(rX).multiply(rZ);
+              this.camera.projectionMatrix=new THREE.Matrix4().fromArray(matrix).multiply(l);
+              this.renderer.resetState();
+              this.renderer.render(this.scene,this.camera);
+              this.map.triggerRepaint();
+            }});
+        }
+      }catch(e){}
     });
     S.map.on('error',()=>{ if(!S.mapReady && !S._retryStyle){ S._retryStyle=true;
       try{ S.map.setStyle('https://basemaps.cartocdn.com/gl/voyager-gl-style/style.json'); }catch(e){} } });
@@ -1160,6 +1262,8 @@ function tick(){
 }
 function updateCar(pos){
   if(S.carMarker) S.carMarker.setLngLat(pos);
+  S.car3d={lng:pos[0],lat:pos[1],bearing:(S.lastPos&&hav(S.lastPos,pos)>2)?brg(S.lastPos,pos):(S.car3d?S.car3d.bearing:0)};
+  if(S.map&&S.model3dOk) S.map.triggerRepaint();
   if(S.map && S.screen==='mapa' && !S.map.isMoving()){
     if(S.nav3d && S.lastPos && hav(S.lastPos,pos)>2){
       S.map.easeTo({center:pos,bearing:brg(S.lastPos,pos),pitch:60,zoom:16.4,duration:600});
@@ -1222,6 +1326,7 @@ function showGpsPopup(p,level){
   S.popupPoi=p.id; S.popupLevel=level;
   $('gpsp-eyebrow').textContent = level===2 ? 'ESTÁS PASANDO POR' : 'NUEVO PUNTO DE INTERÉS CERCA';
   $('gpsp-title').textContent=p.nombre;
+  $('gpsp-tarifa').textContent=fmtMXN(p.tarifa)+' /mes';
   $('gpsp-photo').innerHTML = (p.fotoWm||p.foto) ? '<img src="'+(p.fotoWm||p.foto)+'" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover">' : oohArt({grad:'linear-gradient(160deg,#2a1656,#502090)',copy:''});
   $('gps-popup').dataset.poi=p.id;
   $('gpsp-sem').innerHTML=semaforoHtml(p.estatus);
@@ -1299,7 +1404,7 @@ function buildOoh(){
       </div>
       <div class="media-body"><h3>${m.titulo}</h3>
         <div class="body" style="font-size:14px">${m.ubic}</div>
-        <div class="media-meta"><span class="chip impact-${m.imp}">Impacto ${m.imp==='tactico'?'táctico':m.imp}</span>
+        <div class="media-meta"><span class="chip wm">${fmtMXN(m.tarifa)} /mes</span><span class="chip impact-${m.imp}">Impacto ${m.imp==='tactico'?'táctico':m.imp}</span>
         <span class="chip">${m.medidas}</span></div></div>
     </div>`).join('');
 }
@@ -1307,7 +1412,7 @@ function setOohFilter(f){ oohFilter=f; buildOoh(); }
 function toggleFav(id){
   if(S.favs.has(id)){ S.favs.delete(id); toast('Eliminado de favoritos'); }
   else{ S.favs.add(id); toast('★ Guardado en favoritos'); }
-  saveFavs(); buildOoh(); renderSitios();
+  saveFavs(); buildOoh(); renderSitios(); cartBadge();
 }
 
 /* ═══════════════ FICHAS (sheet) ═══════════════ */
@@ -1332,7 +1437,7 @@ function openPoi(id,mockFirst){
      <div class="eyebrow">${p.tipo.toUpperCase()} · ${p.medidas}</div>
      <h2 style="margin-top:8px">${p.nombre}</h2>
      <p class="body mt10">${p.desc}</p>
-     ${statRow([['Impactos mensuales',flujoMes(p)],['Audiencia',p.audiencia],['Nivel de impacto',p.impacto==='tactico'?'Táctico':p.impacto.charAt(0).toUpperCase()+p.impacto.slice(1)]])}
+     ${statRow([['Tarifa mensual',fmtMXN(p.tarifa)],['Impactos mensuales',flujoMes(p)],['Audiencia',p.audiencia],['Nivel de impacto',p.impacto==='tactico'?'Táctico':p.impacto.charAt(0).toUpperCase()+p.impacto.slice(1)]])}
      <div class="mt20"><div class="eyebrow">BENEFICIO PARA WALMART</div><p class="body mt10">${p.beneficio}</p></div>
      <div class="mt20"><div class="eyebrow">RECOMENDACIÓN CREATIVA</div><p class="body mt10">${p.reco}</p></div>
      <div class="media-meta mt20">${p.campanas.map(c=>`<span class="chip wm">${c}</span>`).join('')}</div>
@@ -1357,7 +1462,7 @@ function openMockup(id){
    <div style="padding:34px 44px 44px">
      <div class="eyebrow">MOCKUP · CONNECTIA × WALMART</div>
      <h2 style="margin-top:8px">${m.titulo}</h2>
-     ${statRow([['Ubicación',m.ubic],['Medidas',m.medidas],['Audiencia',m.aud],['Objetivo',m.obj]])}
+     ${statRow([['Tarifa mensual',fmtMXN(m.tarifa)],['Ubicación',m.ubic],['Medidas',m.medidas],['Audiencia',m.aud],['Objetivo',m.obj]])}
      <div class="mt20"><div class="eyebrow">CAMPAÑAS SUGERIDAS</div>
      <div class="media-meta mt10">${m.campanas.map(c=>`<span class="chip wm">${c}</span>`).join('')}
        <span class="chip">Temporadas: Regreso a clases · Navidad · Hot Sale · Buen Fin</span></div></div>
@@ -1381,6 +1486,133 @@ function toggleCampana(){
   toast(wm ? 'Modo campaña: creatividad Walmart aplicada' : 'Foto real del sitio');
 }
 function addSel(id,nombre){ S.seleccion.add(id); toast('“'+nombre+'” agregado a la propuesta'); }
+
+/* ═══════════════ CARRITO · CHECKOUT · NEWSLETTER ═══════════════ */
+const FN_CHECKOUT='https://mduxlmnlwycwknyapwsx.supabase.co/functions/v1/recorrido-checkout';
+function cartBadge(){ const c=$('cart-count'); if(c) c.textContent=S.favs.size; }
+function cartItems(){ return [...S.favs].map(itemById).filter(Boolean); }
+function subtot(tipo){ return cartItems().filter(x=>S.cartEstado[x.id]===tipo).reduce((a,x)=>a+(x.tarifa||0),0); }
+function openCarrito(){
+  const items=cartItems();
+  openSheet(`
+   <div style="padding:44px 44px 34px">
+     <div class="eyebrow">CARRITO · RESUMEN DE COMPRA</div>
+     <h2 style="margin-top:8px">TU SELECCIÓN (${items.length})</h2>
+     ${items.length?'':'<p class="body mt20">Aún no agregas sitios. Toca ♥ en cualquier sitio del recorrido para agregarlo al carrito.</p>'}
+     <div class="mt20">${items.map(x=>{
+       const disp=x.estatus==='disponible', est=S.cartEstado[x.id];
+       return `<div class="cart-item${disp?'':' no-disp'}">
+         <img class="cart-thumb" src="${x.fotoWm||x.foto||''}" alt="">
+         <div class="cart-info"><div class="cart-nombre">${x.nombre||x.titulo}</div>
+           <div class="cart-precio">${fmtMXN(x.tarifa)} /mes</div>
+           <div class="sp-sem" style="margin-top:4px">${semaforoHtml(x.estatus)}</div></div>
+         <div class="cart-actions">
+           <button class="btn-estado${est==='reservar'?' on-res':''}" ${disp?'':'disabled'} onclick="setEstado('${x.id}','reservar')">RESERVAR</button>
+           <button class="btn-estado${est==='bloquear'?' on-blk':''}" ${disp?'':'disabled'} onclick="setEstado('${x.id}','bloquear')">BLOQUEAR</button>
+         </div>
+         <button class="cart-del" onclick="delCart('${x.id}')">🗑</button>
+       </div>`;}).join('')}</div>
+     <div class="mt20">
+       <div class="chk-row"><span>Reservados</span><strong>${fmtMXN(subtot('reservar'))}</strong></div>
+       <div class="chk-row"><span>Bloqueados</span><strong>${fmtMXN(subtot('bloquear'))}</strong></div>
+       <div class="chk-row chk-total"><span>TOTAL MENSUAL</span><strong>${fmtMXN(subtot('reservar')+subtot('bloquear'))}</strong></div>
+     </div>
+     <div class="mt20" style="display:flex;gap:12px;flex-wrap:wrap">
+       <button class="btn primary" ${Object.keys(S.cartEstado).some(k=>S.favs.has(k))?'':'disabled style="opacity:.4"'} onclick="openCheckout()">VER CHECKOUT</button>
+       <button class="btn ghost" onclick="closeSheet();go('mapa')">SEGUIR EXPLORANDO</button>
+     </div>
+   </div>`);
+}
+function delCart(id){ S.favs.delete(id); delete S.cartEstado[id]; saveFavs(); saveEstado(); cartBadge(); renderSitios(); openCarrito(); }
+function setEstado(id,tipo){
+  S.cartEstado[id]=(S.cartEstado[id]===tipo?null:tipo);
+  if(!S.cartEstado[id]) delete S.cartEstado[id];
+  saveEstado(); openCarrito();
+  if(S.cartEstado[id]) setTimeout(()=>$('push-note').classList.add('show'),350);
+}
+function pushSi(){ $('push-note').classList.remove('show'); closeSheet(); go('mapa');
+  const sp=$('sitios-panel'); if(sp) sp.classList.remove('hide'); }
+function pushNo(){ $('push-note').classList.remove('show'); openCheckout(); }
+function openCheckout(){
+  const res=cartItems().filter(x=>S.cartEstado[x.id]==='reservar');
+  const blk=cartItems().filter(x=>S.cartEstado[x.id]==='bloquear');
+  openSheet(`
+   <div style="padding:44px 44px 34px">
+     <div class="eyebrow">CHECKOUT · RESUMEN DE COSTOS</div>
+     <h2 style="margin-top:8px">CONFIRMA TU SELECCIÓN</h2>
+     ${res.length?`<div class="mt20"><div class="eyebrow" style="color:#7ee2a8">RESERVADOS (${res.length})</div>
+       ${res.map(x=>`<div class="chk-row"><span>${x.nombre||x.titulo}</span><strong>${fmtMXN(x.tarifa)}</strong></div>`).join('')}
+       <div class="chk-row"><span><em>Subtotal reservados</em></span><strong>${fmtMXN(subtot('reservar'))}</strong></div></div>`:''}
+     ${blk.length?`<div class="mt20"><div class="eyebrow" style="color:#ffb184">BLOQUEADOS (${blk.length})</div>
+       ${blk.map(x=>`<div class="chk-row"><span>${x.nombre||x.titulo}</span><strong>${fmtMXN(x.tarifa)}</strong></div>`).join('')}
+       <div class="chk-row"><span><em>Subtotal bloqueados</em></span><strong>${fmtMXN(subtot('bloquear'))}</strong></div></div>`:''}
+     <div class="chk-row chk-total"><span>TOTAL MENSUAL</span><strong>${fmtMXN(subtot('reservar')+subtot('bloquear'))}</strong></div>
+     <div class="mt30"><div class="eyebrow">INGRESA TU CORREO PARA CONFIRMAR</div>
+       <input class="email-input mt10" id="chk-email" type="email" placeholder="tucorreo@empresa.com">
+     </div>
+     <div class="mt20" style="display:flex;gap:12px;flex-wrap:wrap">
+       <button class="btn primary" onclick="submitCheckout()">ENVIAR</button>
+       <button class="btn ghost" onclick="openCarrito()">← VOLVER AL CARRITO</button>
+     </div>
+   </div>`);
+}
+function submitCheckout(){
+  const em=($('chk-email').value||'').trim();
+  if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(em)){ toast('Ingresa un correo válido'); return; }
+  const pay={correo:em,
+    reservados:cartItems().filter(x=>S.cartEstado[x.id]==='reservar').map(x=>({id:x.id,nombre:x.nombre||x.titulo,tarifa:x.tarifa||0})),
+    bloqueados:cartItems().filter(x=>S.cartEstado[x.id]==='bloquear').map(x=>({id:x.id,nombre:x.nombre||x.titulo,tarifa:x.tarifa||0})),
+    total:subtot('reservar')+subtot('bloquear')};
+  try{ fetch(FN_CHECKOUT,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(pay)}).catch(()=>{}); }catch(e){}
+  openSheet(`
+   <div class="gracias-box">
+     <div class="eyebrow">CONNECTIA × WALMART</div>
+     <h2 class="mt10">GRACIAS</h2>
+     <p class="aforismo">«El tiempo es lo más valioso que tenemos, gracias por regalarnos un poco de él.»</p>
+     <p class="body mt10">Atentamente, todo el equipo de Connectia.</p>
+     <p class="body mt20" style="font-size:13px">Enviamos la confirmación a <strong>${em}</strong></p>
+     <div class="mt30" style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
+       <button class="btn primary" onclick="openNewsletter()">VER NEWSLETTER</button>
+       <button class="btn ghost" onclick="closeSheet()">CERRAR</button>
+     </div>
+   </div>`);
+}
+function openNewsletter(){
+  openSheet(`
+   <div style="padding:34px">
+     <div class="nl-hero"><div class="dots">${miniDots(14)}</div>
+       <div class="eyebrow on-photo">CONNECTIA × WALMART</div>
+       <h1 style="margin-top:10px">GRACIAS POR ACOMPAÑARNOS</h1>
+       <p class="body mt10" style="color:rgba(255,255,255,.9)">Tu recorrido quedó guardado. Descarga tu selección:</p>
+     </div>
+     <button class="btn primary nl-btn" onclick="downloadSel('reservar')">⬇ DESCARGA LOS SITIOS RESERVADOS</button>
+     <button class="btn ghost nl-btn" onclick="downloadSel('bloquear')">⬇ DESCARGA LOS SITIOS BLOQUEADOS</button>
+     <div class="mt30"><div class="eyebrow">TAMBIÉN TE PUEDE INTERESAR</div>
+       <div class="tpi-grid">
+         <div class="tpi-card">Próximamente<br>más sitios</div>
+         <div class="tpi-card">Próximamente<br>más sitios</div>
+         <div class="tpi-card">Próximamente<br>más sitios</div>
+       </div></div>
+     <p class="aforismo mt30" style="text-align:center">everything is connected.</p>
+   </div>`);
+}
+function downloadSel(tipo){
+  const items=cartItems().filter(x=>S.cartEstado[x.id]===tipo);
+  if(!items.length){ toast('No tienes sitios '+(tipo==='reservar'?'reservados':'bloqueados')); return; }
+  const BASEURL='https://arhcarrasco-cloud.github.io/recorrido-walmart/';
+  const html=`<!DOCTYPE html><html><head><meta charset="utf-8"><title>Connectia × Walmart · Sitios</title>
+   <style>body{font-family:Arial,Helvetica,sans-serif;background:#201040;color:#fff;padding:40px;max-width:800px;margin:auto}
+   h1{text-transform:uppercase}.s{background:#2a1656;border-radius:16px;padding:20px;margin:18px 0}
+   img{width:100%;border-radius:12px}.t{color:#FFC220;font-weight:bold}.e{color:#7B3FF2;font-size:11px;letter-spacing:2px;text-transform:uppercase}</style></head>
+   <body><div class="e">CONNECTIA × WALMART · RECORRIDO</div><h1>Sitios ${tipo==='reservar'?'reservados':'bloqueados'}</h1>
+   ${items.map(x=>`<div class="s"><img src="${BASEURL}${(x.fotoWm||x.foto)||''}"><h2>${x.nombre||x.titulo}</h2>
+     <p>${x.tipo||''} · ${x.medidas||''}</p><p class="t">${fmtMXN(x.tarifa)} /mes</p></div>`).join('')}
+   <p><em>El tiempo es lo más valioso que tenemos, gracias por regalarnos un poco de él.<br>— Todo el equipo de Connectia</em></p></body></html>`;
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(new Blob([html],{type:'text/html'}));
+  a.download='connectia-walmart-sitios-'+(tipo==='reservar'?'reservados':'bloqueados')+'.html';
+  a.click(); toast('Descarga iniciada');
+}
 
 /* ═══════════════ VENTANA DE SITIOS DEL RECORRIDO ═══════════════ */
 function flujoMes(p){
@@ -1407,6 +1639,7 @@ function renderSitios(){
      <div class="sp-info"><div class="sp-name">${p.nombre}</div>
        <div class="sp-meta">${p.tipo}</div>
        <div class="sp-imp"><strong>${flujoMes(p)}</strong></div>
+       <div class="sp-tarifa">${fmtMXN(p.tarifa)} /mes</div>
        <div class="sp-sem">${semaforoHtml(p.estatus)}</div>
        <div class="sp-chains">${nearestChains(p)}</div>
        <div class="sp-chains">${nearestChains(p)}</div></div>
@@ -1550,6 +1783,7 @@ function exportResumen(){
 function init(){
   buildNav(); buildOoh(); buildVideos(); buildSoluciones(); buildCasos();
   $('ruta-count').textContent=POIS.length;
+  cartBadge();
   bigDots($('welcome-dots'),64,true); bigDots($('cierre-dots'),16);
   renderSitios();
   initMap();
